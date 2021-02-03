@@ -1,6 +1,16 @@
 import React from 'react';
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: ''
+    }
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange() {
+  }
   render() {
     return (
       <div>
@@ -11,15 +21,15 @@ class Login extends React.Component {
           <h4 className="text-center">Welcome to BudgetBuddy!</h4>
           <p className="text-center"> Lets start by getting logged in to your BudgetBuddy Account.</p>
           <form className="mt-4">
-            <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" class="form-control" placeholder="Enter email" />
+            <div className="form-group">
+              <label htmlFor="email">Email address</label>
+              <input type="email" className="form-control" id="email" placeholder="Enter email" value={this.state.email} onChange={this.handleChange}/>
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control"  placeholder="Password" />
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input type="password" className="form-control" id="password" placeholder="Password" value={this.state.password} onChange={this.handleChange}/>
             </div>
-            <button type="submit" class="btn btn-success btn-block mt-4">Submit</button>
+            <button type="submit" className="btn btn-success btn-block mt-4">Submit</button>
           </form>
           <small className="mt-3 text-center d-block">Don&apos;t have an account? <a href="#">Sign up</a></small>
         </div>

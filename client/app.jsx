@@ -10,7 +10,10 @@ import Link from './pages/link'
 export default class App extends React.Component {
   render() {
     return (
-      <Link/>
+      <>
+        <Header />
+        <Accounts />
+      </>
     )
   }
 }
