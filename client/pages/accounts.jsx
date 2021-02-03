@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from './link'
+import PlainLink, { PlaidLink } from 'react-plaid-link'
 
 class Accounts extends React.Component {
   constructor(props) {
@@ -17,11 +17,23 @@ class Accounts extends React.Component {
       .then(token => this.setState({linkToken: token.link_token}))
   }
   render() {
-    return (
-      <div>
-        <button onClick={this.handleClick}>Connect to Bank Account</button>
-      </div>
-    )
+    if(this.state.linkToken === '') {
+      return (
+        <button onClick={this.handleClick}>Click</button>
+      )
+    } else {
+        return (
+        <div>
+          <PlaidLink
+            token={this.state.linkToken}
+            onSuccess={(public_token, metadata) => {
+
+            }}>
+            Connect a bank account
+          </PlaidLink>
+        </div>
+      )
+    }
   }
 }
 

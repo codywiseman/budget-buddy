@@ -4,7 +4,6 @@ import Header from './pages/header';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Accounts from './pages/accounts';
-import Link from './pages/link'
 
 
 export default class App extends React.Component {
