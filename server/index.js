@@ -7,6 +7,7 @@ const plaid = require('plaid');
 const util = require('util');
 const bodyParser = require('body-parser');
 const moment = require('moment');
+const pg = require('pg')
 
 const APP_PORT = process.env.APP_PORT || 3000;
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
@@ -38,6 +39,30 @@ app.use(
   }),
 );
 app.use(bodyParser.json());
+
+const db = new pg.Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+
+app.post('/api/budgetbuddy/login', (req, res, next) => {
+  const {email , password} = req.body;
+  if (!email || !password) {
+    throw new ClientError(400, 'invalid login');
+  }
+  const sql =  `
+    select "email"
+    from "users"
+    where "email" = $1 and "password" = $2
+  `;
+  const params = [email, password]
+  db.query(sql, params)
+    .then(response => {
+      const users = response.rows;
+      res.status(200).send(users)
+    })
+    .catch(err => next(err))
+})
 
 // Create a link token with configs which we can then use to initialize Plaid Link client-side.
 app.post('/api/create_link_token', function (request, response, next) {

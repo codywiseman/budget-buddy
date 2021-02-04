@@ -1,18 +1,18 @@
 import React from 'react';
 import Navbar from '../components/nav';
 
-class Accounts extends React.Component {
+class Budgets extends React.Component {
   constructor(props) {
     super(props)
   }
   render() {
-      return (
+    return (
       <>
         <Navbar />
-        <h1>Accounts</h1>
+        <h1>Budgets</h1>
       </>
     )
   }
 }
 
-export default Accounts;
+export default Budgets;

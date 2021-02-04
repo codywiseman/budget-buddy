@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../components/nav';
 
-class Accounts extends React.Component {
+class Transactions extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -9,10 +9,9 @@ class Accounts extends React.Component {
       return (
       <>
         <Navbar />
-        <h1>Accounts</h1>
       </>
     )
   }
 }
 
-export default Accounts;
+export default Transactions;

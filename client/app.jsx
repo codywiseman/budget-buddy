@@ -1,18 +1,59 @@
 import React from 'react';
+import parseRoute from './lib/parse-route';
+import AppContext from './lib/app-context';
 import Home from './pages/home';
-import Header from './pages/header';
-import Login from './pages/login';
-import Signup from './pages/signup';
 import Accounts from './pages/accounts';
+import Signup from './pages/signup';
+import Budgets from './pages/budgets';
+import Transactions from './pages/transactions';
+import Reports from './pages/reports';
+import AuthPage from './pages/AuthPage';
 
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null,
+      route: parseRoute(window.location.hash)
+    }
+  this.renderPage = this.renderPage.bind(this);
+  }
+  componentDidMount() {
+    window.addEventListener('hashchange', () => {
+      this.setState({
+        route: parseRoute(window.location.hash)
+      })
+    })
+  }
+  renderPage() {
+    const { path } = this.state.route
+    if(path === '') {
+      return <Home />
+    }
+    if (path === 'accounts') {
+      return <Accounts />
+    }
+    if (path === 'budget') {
+      return <Budgets />
+    }
+    if (path === 'transactions') {
+      return <Transactions />
+    }
+    if (path === 'reports') {
+      return <Reports />
+    }
+  }
   render() {
+    const { user, route } = this.state;
+    const { handleSignIn } = this;
+    const contextValue = { user, route, handleSignIn};
     return (
-      <div>
-        <Header />
-        <Accounts />
-      </div>
+      <AppContext.Provider value={contextValue}>
+        <>
+          {this.renderPage()}
+        </>
+      </AppContext.Provider>
     )
   }
 }
