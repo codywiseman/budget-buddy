@@ -3,12 +3,10 @@ import parseRoute from './lib/parse-route';
 import AppContext from './lib/app-context';
 import Home from './pages/home';
 import Accounts from './pages/accounts';
-import Signup from './pages/signup';
 import Budgets from './pages/budgets';
 import Transactions from './pages/transactions';
 import Reports from './pages/reports';
 import AuthPage from './pages/AuthPage';
-
 
 export default class App extends React.Component {
   constructor(props) {
@@ -31,6 +29,9 @@ export default class App extends React.Component {
     if(path === '') {
       return <Home />
     }
+    if (path === 'login' || path === 'sign-up') {
+      return <Auth />;
+    }
     if (path === 'accounts') {
       return <Accounts />
     }
@@ -48,12 +49,18 @@ export default class App extends React.Component {
     const { user, route } = this.state;
     const { handleSignIn } = this;
     const contextValue = { user, route, handleSignIn};
-    return (
-      <AppContext.Provider value={contextValue}>
-        <>
-          {this.renderPage()}
-        </>
-      </AppContext.Provider>
-    )
+    if(!user) {
+      return (
+        <AuthPage />
+      )
+    } else {
+      return (
+        <AppContext.Provider value={contextValue}>
+          <>
+            {this.renderPage()}
+          </>
+        </AppContext.Provider>
+      )
+    }
   }
 }
