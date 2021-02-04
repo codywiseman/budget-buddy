@@ -29,8 +29,8 @@ export default class App extends React.Component {
     if(path === '') {
       return <Home />
     }
-    if (path === 'login' || path === 'sign-up') {
-      return <Auth />;
+    if (path === 'login' || path === 'signup') {
+      return <AuthPage />;
     }
     if (path === 'accounts') {
       return <Accounts />
@@ -49,18 +49,12 @@ export default class App extends React.Component {
     const { user, route } = this.state;
     const { handleSignIn } = this;
     const contextValue = { user, route, handleSignIn};
-    if(!user) {
-      return (
-        <AuthPage />
-      )
-    } else {
-      return (
-        <AppContext.Provider value={contextValue}>
-          <>
-            {this.renderPage()}
-          </>
-        </AppContext.Provider>
-      )
-    }
+    return (
+      <AppContext.Provider value={contextValue}>
+        <>
+          {this.renderPage()}
+        </>
+      </AppContext.Provider>
+    )
   }
 }

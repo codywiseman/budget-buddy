@@ -1,7 +1,8 @@
 import React from 'react';
-import Login from '../components/login';
+import Auth from '../components/auth';
+import AppContext from '../lib/app-context'
 
-class AuthPage extends React.Component {
+export default class AuthPage extends React.Component {
   render() {
     return (
       <div>
@@ -10,12 +11,11 @@ class AuthPage extends React.Component {
         </div>
         <div className="container mt-5">
           <h4 className="text-center">Welcome to BudgetBuddy!</h4>
-          <p className="text-center"> Lets start by getting logged in to your BudgetBuddy Account.</p>
-          <Login />
+          <Auth action={this.context.route}/>
         </div>
       </div>
     );
   }
 }
 
-export default  AuthPage;
+AuthPage.contextType = AppContext;
