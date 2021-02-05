@@ -8,7 +8,6 @@ export default class Home extends React.Component {
     if (!this.context.user) {
       return <Redirect to="login" />
     }
-    console.log(this)
     return (
       <>
         <Navbar />

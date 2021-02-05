@@ -5,9 +5,8 @@ const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const plaid = require('plaid');
 const util = require('util');
-const bodyParser = require('body-parser');
 const moment = require('moment');
-const pg = require('pg')
+const pg = require('pg');
 
 const APP_PORT = process.env.APP_PORT || 3000;
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
@@ -15,10 +14,6 @@ const PLAID_SECRET = process.env.PLAID_SECRET;
 const PLAID_ENV = process.env.PLAID_ENV || 'sandbox';
 const PLAID_PRODUCTS = (process.env.PLAID_PRODUCTS || 'transactions').split(',');
 const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || 'US').split( ',');
-
-let ACCESS_TOKEN = null;
-let PUBLIC_TOKEN = null;
-let ITEM_ID = null;
 
 const client = new plaid.Client({
   clientID: PLAID_CLIENT_ID,
@@ -33,12 +28,6 @@ const app = express();
 app.use(express.json());
 app.use(staticMiddleware);
 app.use(express.static('public'));
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  }),
-);
-app.use(bodyParser.json());
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL
@@ -90,12 +79,11 @@ app.post('/api/create_link_token', function (request, response, next) {
 // an API access_token
 // https://plaid.com/docs/#exchange-token-flow
 app.post('/api/set_access_token', function (request, response, next) {
-  PUBLIC_TOKEN = request.body.public_token;
+  console.log('received!')
+  const PUBLIC_TOKEN = request.body.token;
   client.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
     if (error != null) {
-      return response.json({
-        error,
-      });
+      return response.json(error)
     }
     ACCESS_TOKEN = tokenResponse.access_token;
     ITEM_ID = tokenResponse.item_id;

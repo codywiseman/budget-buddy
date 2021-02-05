@@ -6,16 +6,21 @@ import Accounts from './pages/accounts';
 import Budgets from './pages/budgets';
 import Transactions from './pages/transactions';
 import Reports from './pages/reports';
-import AuthPage from './pages/AuthPage';
+import AuthPage from './pages/authPage';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: null,
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      linkToken: null,
+      accessToken: null
     }
   this.renderPage = this.renderPage.bind(this);
+  this.handleSignIn = this.handleSignIn.bind(this);
+  this.handleLinkToken = this.handleLinkToken.bind(this);
+  this.handleAccessToken = this.handleAccessToken.bind(this);
   }
   componentDidMount() {
     window.addEventListener('hashchange', () => {
@@ -23,6 +28,22 @@ export default class App extends React.Component {
         route: parseRoute(window.location.hash)
       })
     })
+    const user = window.localStorage.getItem('email');
+    const accessToken = window.localStorage.getItem('accessToken')
+    this.setState({ user, accessToken });
+
+  }
+  handleSignIn(result) {
+    const { email } = result;
+    window.localStorage.setItem('email', email);
+    this.setState({ user: email });
+  }
+  handleLinkToken(token) {
+    this.setState({linkToken: token})
+  }
+  handleAccessToken(token) {
+    this.setState({ accessToken: token })
+    window.localStorage.setItem('accessToken', token)
   }
   renderPage() {
     const { path } = this.state.route
@@ -46,9 +67,9 @@ export default class App extends React.Component {
     }
   }
   render() {
-    const { user, route } = this.state;
-    const { handleSignIn } = this;
-    const contextValue = { user, route, handleSignIn};
+    const { user, route, linkToken, accessToken } = this.state;
+    const { handleSignIn, handleLinkToken, handleAccessToken } = this;
+    const contextValue = { user, route, linkToken, accessToken, handleSignIn, handleLinkToken, handleAccessToken };
     return (
       <AppContext.Provider value={contextValue}>
         <>
