@@ -119,7 +119,6 @@ app.post('/api/create_link_token', function (request, response, next) {
 // an API access_token
 // https://plaid.com/docs/#exchange-token-flow
 app.post('/api/set_access_token', function (request, response, next) {
-  console.log('received!')
   const PUBLIC_TOKEN = request.body.token;
   client.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
     if (error != null) {
@@ -131,21 +130,19 @@ app.post('/api/set_access_token', function (request, response, next) {
       access_token: ACCESS_TOKEN,
       item_id: ITEM_ID,
       error: null,
-    });
-  });
-});
+    })
+  })
+})
 
 // Retrieve an Item's accounts
 // https://plaid.com/docs/#accounts
-app.get('/api/accounts', function (request, response, next) {
-  client.getAccounts(ACCESS_TOKEN, function (error, accountsResponse) {
+app.post('/api/accounts', function (request, response, next) {
+  const accessToken = request.body.accessToken;
+  client.getAccounts(accessToken, function (error, accountsResponse) {
     if (error != null) {
-      prettyPrintResponse(error);
-      return response.json({
-        error,
-      });
+      return response.json(error)
     }
-    prettyPrintResponse(accountsResponse);
+
     response.json(accountsResponse);
   });
 });

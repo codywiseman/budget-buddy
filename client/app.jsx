@@ -31,7 +31,7 @@ export default class App extends React.Component {
     })
     const user = window.localStorage.getItem('email');
     const accessToken = window.localStorage.getItem('accessToken');
-    this.setState ({ user })
+    this.setState ({ user, accessToken })
   }
   handleSignIn(result) {
     const { email } = result;
