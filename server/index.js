@@ -8,7 +8,6 @@ const util = require('util');
 const moment = require('moment');
 const pg = require('pg');
 
-const APP_PORT = process.env.APP_PORT || 3000;
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
 const PLAID_SECRET = process.env.PLAID_SECRET;
 const PLAID_ENV = process.env.PLAID_ENV || 'sandbox';
@@ -52,6 +51,47 @@ app.post('/api/budgetbuddy/login', (req, res, next) => {
     })
     .catch(err => next(err))
 })
+
+app.post('/api/budgetbuddy/save_token', (req, res, next) => {
+  const { accessToken, email } = req.body;
+  if (!accessToken || !email) {
+    throw new ClientError(400, 'invalid access token');
+  }
+  const sql = `
+    update "users"
+    set "accessToken" = $1
+    where "email" = $2
+    returning *
+  `;
+  const params = [accessToken, email]
+  db.query(sql, params)
+    .then(response => {
+      const token = response.rows;
+      res.status(200).send(token)
+    })
+    .catch(err => next(err))
+})
+
+app.post('/api/budgetbuddy/get_access_token', (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new ClientError(400, 'email required');
+  }
+  const sql = `
+    select "accessToken"
+    from "users"
+    where "email" = $1
+  `;
+  const params = [email]
+  db.query(sql, params)
+    .then(response => {
+      const accessToken = response.rows;
+      res.status(200).send(accessToken)
+    })
+    .catch(err => next(err))
+
+})
+
 
 // Create a link token with configs which we can then use to initialize Plaid Link client-side.
 app.post('/api/create_link_token', function (request, response, next) {
@@ -151,7 +191,6 @@ app.get('/api/balance', function (request, response, next) {
 });
 
 app.use(errorMiddleware);
-
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console

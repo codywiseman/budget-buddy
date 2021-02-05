@@ -7,6 +7,8 @@ import Budgets from './pages/budgets';
 import Transactions from './pages/transactions';
 import Reports from './pages/reports';
 import AuthPage from './pages/authPage';
+import getAccessToken from './lib/get-access'
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -20,7 +22,6 @@ export default class App extends React.Component {
   this.renderPage = this.renderPage.bind(this);
   this.handleSignIn = this.handleSignIn.bind(this);
   this.handleLinkToken = this.handleLinkToken.bind(this);
-  this.handleAccessToken = this.handleAccessToken.bind(this);
   }
   componentDidMount() {
     window.addEventListener('hashchange', () => {
@@ -29,21 +30,21 @@ export default class App extends React.Component {
       })
     })
     const user = window.localStorage.getItem('email');
-    const accessToken = window.localStorage.getItem('accessToken')
-    this.setState({ user, accessToken });
-
+    const accessToken = window.localStorage.getItem('accessToken');
+    this.setState ({ user })
   }
   handleSignIn(result) {
     const { email } = result;
+    const accessToken = getAccessToken(email);
     window.localStorage.setItem('email', email);
-    this.setState({ user: email });
+    window.localStorage.setItem('accessToken', accessToken);
+    this.setState({
+      user: email ,
+      accessToken: accessToken
+    });
   }
   handleLinkToken(token) {
     this.setState({linkToken: token})
-  }
-  handleAccessToken(token) {
-    this.setState({ accessToken: token })
-    window.localStorage.setItem('accessToken', token)
   }
   renderPage() {
     const { path } = this.state.route
@@ -67,9 +68,10 @@ export default class App extends React.Component {
     }
   }
   render() {
+    console.log(this.state)
     const { user, route, linkToken, accessToken } = this.state;
-    const { handleSignIn, handleLinkToken, handleAccessToken } = this;
-    const contextValue = { user, route, linkToken, accessToken, handleSignIn, handleLinkToken, handleAccessToken };
+    const { handleSignIn, handleLinkToken } = this;
+    const contextValue = { user, route, linkToken, accessToken, handleSignIn, handleLinkToken };
     return (
       <AppContext.Provider value={contextValue}>
         <>
