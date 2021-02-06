@@ -39,7 +39,7 @@ app.post('/api/budgetbuddy/login', (req, res, next) => {
     throw new ClientError(400, 'invalid login');
   }
   const sql =  `
-    select "email"
+    select "email", "userId"
     from "users"
     where "email" = $1 and "password" = $2
   `;
@@ -89,7 +89,46 @@ app.post('/api/budgetbuddy/get_access_token', (req, res, next) => {
       res.status(200).send(accessToken)
     })
     .catch(err => next(err))
+})
 
+app.post('/api/budgetbuddy/account_balance', (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new ClientError(400, 'email required');
+  }
+  const sql = `
+    select "a"."accountName", "a"."type", "a"."balance"
+    from "accounts" as "a"
+    join "users" using ("userId")
+    where "users"."email" = $1
+  `;
+  const params = [email];
+  db.query(sql, params)
+    .then(response => {
+      const accountInfo = response.rows;
+      res.status(200).send(accountInfo)
+    })
+    .catch(err => next(err))
+})
+
+app.post('/api/budgetbuddy/update_account_balance', (req, res, next) => {
+  const { plaidId, userId, accountName, type, balance } = req.body;
+  if (!plaidId || !userId || !accountName || !type || !balance) {
+    throw new ClientError(400, 'email required');
+  }
+  const sql = `
+    insert into "accounts" ("plaidId", "userId" , "accountName", "type" , "balance")
+    values ($1, $2, $3, $4, $5)
+    on conflict ("plaidId")
+    do update set "accountName" = $3 , "type" = $4, "balance" = $5
+  `
+  const params = [plaidId, userId, accountName, type, balance]
+  db.query(sql, params)
+    .then(response => {
+      const accountInfo = response.rows;
+      res.status(200).send(accountInfo)
+    })
+    .catch(err => next(err))
 })
 
 

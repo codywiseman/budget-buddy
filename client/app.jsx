@@ -15,6 +15,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       user: null,
+      userId: null,
       route: parseRoute(window.location.hash),
       linkToken: null,
       accessToken: null
@@ -34,12 +35,13 @@ export default class App extends React.Component {
     this.setState ({ user, accessToken })
   }
   handleSignIn(result) {
-    const { email } = result;
+    const { email, userId } = result;
     const accessToken = getAccessToken(email);
     window.localStorage.setItem('email', email);
     window.localStorage.setItem('accessToken', accessToken);
     this.setState({
       user: email ,
+      userId: userId,
       accessToken: accessToken
     });
   }

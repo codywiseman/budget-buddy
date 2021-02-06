@@ -21,11 +21,12 @@ CREATE TABLE "users" (
 
 
 CREATE TABLE "accounts" (
-	"accountId" serial NOT NULL,
+	"plaidId" integer NOT NULL,
 	"userId" integer NOT NULL,
-	"bank" TEXT NOT NULL,
-	"balance" TEXT NOT NULL,
-	CONSTRAINT "accounts_pk" PRIMARY KEY ("accountId")
+	"accountName" TEXT NOT NULL,
+	"type" TEXT NOT NULL,
+	"balance" integer NOT NULL,
+	CONSTRAINT "accounts_pk" PRIMARY KEY ("plaidId")
 ) WITH (
   OIDS=FALSE
 );
