@@ -112,17 +112,17 @@ app.post('/api/budgetbuddy/account_balance', (req, res, next) => {
 })
 
 app.post('/api/budgetbuddy/update_account_balance', (req, res, next) => {
-  const { plaidId, userId, accountName, type, balance } = req.body;
-  if (!plaidId || !userId || !accountName || !type || !balance) {
-    throw new ClientError(400, 'email required');
+  const { plaidId, userId, name, subtype, balances } = req.body;
+  if (!plaidId || !userId || !name || !subtype || !balances) {
+    throw new ClientError(400, 'missing fields');
   }
   const sql = `
-    insert into "accounts" ("plaidId", "userId" , "accountName", "type" , "balance")
+    insert into "accounts" ("account_id", "userId" , "name", "subtype" , "balances")
     values ($1, $2, $3, $4, $5)
-    on conflict ("plaidId")
-    do update set "accountName" = $3 , "type" = $4, "balance" = $5
+    on conflict ("account_id")
+    do update set "name" = $3 , "subtype" = $4, "balances" = $5
   `
-  const params = [plaidId, userId, accountName, type, balance]
+  const params = [plaidId, userId, name, subtype, balances]
   db.query(sql, params)
     .then(response => {
       const accountInfo = response.rows;
@@ -130,6 +130,31 @@ app.post('/api/budgetbuddy/update_account_balance', (req, res, next) => {
     })
     .catch(err => next(err))
 })
+
+//retrieve current account info from database to render to accounts page
+
+app.post('/api/budgetbuddy/accounts', (req, res, next) => {
+  const { userId } = req.body;
+  if (!userId ) {
+    throw new ClientError(400, 'userId required');
+  }
+  const sql = `
+    select row_to_json("accounts")
+    from "accounts"
+    where "userId" = $1
+  `;
+  const params = [userId]
+  db.query(sql, params)
+    .then(response => {
+      const accountInfo = [];
+      response.rows.forEach(item => {
+        accountInfo.push(item.row_to_json)
+      })
+      res.status(200).send(accountInfo)
+    })
+    .catch(err => next(err))
+})
+
 
 
 // Create a link token with configs which we can then use to initialize Plaid Link client-side.

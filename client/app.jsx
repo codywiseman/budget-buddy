@@ -31,14 +31,16 @@ export default class App extends React.Component {
       })
     })
     const user = window.localStorage.getItem('email');
+    const userId = window.localStorage.getItem('userId');
     const accessToken = window.localStorage.getItem('accessToken');
-    this.setState ({ user, accessToken })
+    this.setState ({ user, userId, accessToken })
   }
   handleSignIn(result) {
     const { email, userId } = result;
     const accessToken = getAccessToken(email);
     window.localStorage.setItem('email', email);
     window.localStorage.setItem('accessToken', accessToken);
+    window.localStorage.setItem('userId', userId);
     this.setState({
       user: email ,
       userId: userId,
@@ -70,10 +72,9 @@ export default class App extends React.Component {
     }
   }
   render() {
-    console.log(this.state)
-    const { user, route, linkToken, accessToken } = this.state;
+    const { user, route, linkToken, accessToken, userId } = this.state;
     const { handleSignIn, handleLinkToken } = this;
-    const contextValue = { user, route, linkToken, accessToken, handleSignIn, handleLinkToken };
+    const contextValue = { user, route, linkToken, accessToken, userId, handleSignIn, handleLinkToken };
     return (
       <AppContext.Provider value={contextValue}>
         <>

@@ -9,7 +9,6 @@ export default class Accounts extends React.Component {
     super(props)
   }
   render() {
-    console.log(this.context)
     if(!this.context.accessToken) {
       return (
         <>
