@@ -39,7 +39,7 @@ app.post('/api/budgetbuddy/login', (req, res, next) => {
     throw new ClientError(400, 'invalid login');
   }
   const sql =  `
-    select "email"
+    select "email", "userId"
     from "users"
     where "email" = $1 and "password" = $2
   `;
@@ -89,8 +89,72 @@ app.post('/api/budgetbuddy/get_access_token', (req, res, next) => {
       res.status(200).send(accessToken)
     })
     .catch(err => next(err))
-
 })
+
+app.post('/api/budgetbuddy/account_balance', (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new ClientError(400, 'email required');
+  }
+  const sql = `
+    select "a"."accountName", "a"."type", "a"."balance"
+    from "accounts" as "a"
+    join "users" using ("userId")
+    where "users"."email" = $1
+  `;
+  const params = [email];
+  db.query(sql, params)
+    .then(response => {
+      const accountInfo = response.rows;
+      res.status(200).send(accountInfo)
+    })
+    .catch(err => next(err))
+})
+
+app.post('/api/budgetbuddy/update_account_balance', (req, res, next) => {
+  const { plaidId, userId, name, subtype, balances } = req.body;
+  if (!plaidId || !userId || !name || !subtype || !balances) {
+    throw new ClientError(400, 'missing fields');
+  }
+  const sql = `
+    insert into "accounts" ("account_id", "userId" , "name", "subtype" , "balances")
+    values ($1, $2, $3, $4, $5)
+    on conflict ("account_id")
+    do update set "name" = $3 , "subtype" = $4, "balances" = $5
+  `
+  const params = [plaidId, userId, name, subtype, balances]
+  db.query(sql, params)
+    .then(response => {
+      const accountInfo = response.rows;
+      res.status(200).send(accountInfo)
+    })
+    .catch(err => next(err))
+})
+
+//retrieve current account info from database to render to accounts page
+
+app.post('/api/budgetbuddy/accounts', (req, res, next) => {
+  const { userId } = req.body;
+  if (!userId ) {
+    throw new ClientError(400, 'userId required');
+  }
+  const sql = `
+    select row_to_json("accounts")
+    from "accounts"
+    where "userId" = $1
+  `;
+  const params = [userId]
+  db.query(sql, params)
+    .then(response => {
+      const accountInfo = [];
+      response.rows.forEach(item => {
+        accountInfo.push(item.row_to_json)
+      })
+      res.status(200).send(accountInfo)
+    })
+    .catch(err => next(err))
+})
+
 
 
 // Create a link token with configs which we can then use to initialize Plaid Link client-side.
@@ -119,7 +183,6 @@ app.post('/api/create_link_token', function (request, response, next) {
 // an API access_token
 // https://plaid.com/docs/#exchange-token-flow
 app.post('/api/set_access_token', function (request, response, next) {
-  console.log('received!')
   const PUBLIC_TOKEN = request.body.token;
   client.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
     if (error != null) {
@@ -131,21 +194,19 @@ app.post('/api/set_access_token', function (request, response, next) {
       access_token: ACCESS_TOKEN,
       item_id: ITEM_ID,
       error: null,
-    });
-  });
-});
+    })
+  })
+})
 
 // Retrieve an Item's accounts
 // https://plaid.com/docs/#accounts
-app.get('/api/accounts', function (request, response, next) {
-  client.getAccounts(ACCESS_TOKEN, function (error, accountsResponse) {
+app.post('/api/accounts', function (request, response, next) {
+  const accessToken = request.body.accessToken;
+  client.getAccounts(accessToken, function (error, accountsResponse) {
     if (error != null) {
-      prettyPrintResponse(error);
-      return response.json({
-        error,
-      });
+      return response.json(error)
     }
-    prettyPrintResponse(accountsResponse);
+
     response.json(accountsResponse);
   });
 });

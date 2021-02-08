@@ -21,11 +21,12 @@ CREATE TABLE "users" (
 
 
 CREATE TABLE "accounts" (
-	"accountId" serial NOT NULL,
+	"account_id" TEXT NOT NULL,
 	"userId" integer NOT NULL,
-	"bank" TEXT NOT NULL,
-	"balance" TEXT NOT NULL,
-	CONSTRAINT "accounts_pk" PRIMARY KEY ("accountId")
+	"name" TEXT NOT NULL,
+	"subtype" TEXT NOT NULL,
+	"balances" DECIMAL NOT NULL,
+	CONSTRAINT "accounts_pk" PRIMARY KEY ("account_id")
 ) WITH (
   OIDS=FALSE
 );
@@ -37,7 +38,7 @@ CREATE TABLE "transactions" (
 	"userId" integer NOT NULL,
 	"name" TEXT NOT NULL,
 	"date" DATE NOT NULL,
-	"amount" integer NOT NULL,
+	"amount" DECIMAL NOT NULL,
 	"category" TEXT NOT NULL,
 	"included" BOOLEAN NOT NULL,
 	CONSTRAINT "transactions_pk" PRIMARY KEY ("transactionId")
@@ -51,9 +52,9 @@ CREATE TABLE "budgets" (
 	"budgetId" serial NOT NULL,
 	"createdBy" integer NOT NULL,
 	"date" DATE NOT NULL,
-	"income" integer NOT NULL,
-	"savings" integer NOT NULL,
-	"spendingBudget" integer NOT NULL,
+	"income" DECIMAL NOT NULL,
+	"savings" DECIMAL NOT NULL,
+	"spendingBudget" DECIMAL NOT NULL,
 	CONSTRAINT "budgets_pk" PRIMARY KEY ("budgetId")
 ) WITH (
   OIDS=FALSE

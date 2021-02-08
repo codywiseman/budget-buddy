@@ -39,6 +39,7 @@ export default class Link extends React.Component {
             .then(accessToken => {
               window.localStorage.setItem('accessToken', accessToken.access_token);
               this.saveAccessToken(accessToken.access_token);
+              window.location.reload(true);
             })
             .catch(err => console.log('ERROR'))
           }}>
