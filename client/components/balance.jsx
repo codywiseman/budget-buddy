@@ -19,7 +19,7 @@ export default class Balance extends React.Component {
     })
     .then(response => response.json())
     .then(account => this.setState({accounts: account}))
-    .catch(err => console.log(err))
+    .catch(err => console.log('ERROR'))
   }
   updateAccounts(account) {
      fetch('/api/budgetbuddy/update_account_balance', {
