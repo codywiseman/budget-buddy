@@ -49,12 +49,11 @@ CREATE TABLE "transactions" (
 
 
 CREATE TABLE "budgets" (
-	"budgetId" serial NOT NULL,
+	"budgetId" integer NOT NULL,
 	"createdBy" integer NOT NULL,
-	"date" DATE NOT NULL,
 	"income" DECIMAL NOT NULL,
 	"savings" DECIMAL NOT NULL,
-	"spendingBudget" DECIMAL NOT NULL,
+	"static" DECIMAL NOT NULL,
 	CONSTRAINT "budgets_pk" PRIMARY KEY ("budgetId")
 ) WITH (
   OIDS=FALSE
@@ -63,10 +62,14 @@ CREATE TABLE "budgets" (
 
 
 CREATE TABLE "budgetCategories" (
-	"itemId" serial NOT NULL,
-	"budgetId" integer NOT NULL,
-	"category" serial NOT NULL,
-	"amount" serial NOT NULL,
+	"itemId" integer NOT NULL,
+	"createdBy" integer NOT NULL,
+	"food" integer NOT NULL,
+	"travel" integer NOT NULL,
+	"entertainment" integer NOT NULL,
+	"healthcare" integer NOT NULL,
+	"personal" integer NOT NULL,
+	"education" integer NOT NULL,
 	CONSTRAINT "budgetCategories_pk" PRIMARY KEY ("itemId")
 ) WITH (
   OIDS=FALSE
@@ -81,4 +84,4 @@ ALTER TABLE "transactions" ADD CONSTRAINT "transactions_fk0" FOREIGN KEY ("userI
 
 ALTER TABLE "budgets" ADD CONSTRAINT "budgets_fk0" FOREIGN KEY ("createdBy") REFERENCES "users"("userId");
 
-ALTER TABLE "budgetCategories" ADD CONSTRAINT "budgetCategories_fk0" FOREIGN KEY ("budgetId") REFERENCES "budgets"("budgetId");
+ALTER TABLE "budgetCategories" ADD CONSTRAINT "budgetCategories_fk0" FOREIGN KEY ("createdBy") REFERENCES "budgets"("createdBy");
