@@ -16,7 +16,9 @@ export default class Calculator extends React.Component {
         entertainment: 0,
         healthcare: 0,
         personal: 0,
-        education: 0
+        education: 0,
+        services: 0,
+        misc: 0
       }
     }
     this.handleChange = this.handleChange.bind(this)
@@ -34,8 +36,12 @@ export default class Calculator extends React.Component {
     })
     .then(response => response.json())
     .then(data => {
-      const { income, savings, static: staticEx } = data
-      this.setState({income, savings, staticEx})
+      if (data.length === 0) {
+        return
+      } else {
+        const { income, savings, static: staticEx } = data
+        this.setState({ income, savings, staticEx })
+      }
     })
     .catch(err => console.log('ERROR'))
     fetch('/api/budgetbuddy/expenses', {
@@ -47,8 +53,12 @@ export default class Calculator extends React.Component {
     })
     .then(response => response.json())
     .then(data => {
-      const { education, entertainment, food, healthcare, personal, travel } = data
-      this.setState({ expenses: {education, entertainment, food, healthcare, personal, travel}})
+      if(data.length === 0) {
+        return
+      } else {
+         const { education, entertainment, food, healthcare, personal, travel, services, misc } = data
+         this.setState({ expenses: {education, entertainment, food, healthcare, personal, travel}})
+      }
     })
     .catch(err => console.log('ERROR'))
   }
@@ -96,7 +106,9 @@ export default class Calculator extends React.Component {
         entertainment: this.state.expenses.entertainment,
         healthcare: this.state.expenses.healthcare,
         personal: this.state.expenses.personal,
-        education: this.state.expenses.education
+        education: this.state.expenses.education,
+        services: this.state.expenses.services,
+        misc: this.state.expenses.misc
       })
     })
     .then(() => {
@@ -176,7 +188,19 @@ export default class Calculator extends React.Component {
               </tr>
               <tr>
                 <td>Education</td>
-                  <td>{toDollar(budget * (this.state.expenses.education / 100))}</td>
+                <td>{toDollar(budget * (this.state.expenses.education / 100))}</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Services</td>
+                <td>{toDollar(budget * (this.state.expenses.services / 100))}</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Misc</td>
+                <td>{toDollar(budget * (this.state.expenses.misc / 100))}</td>
                 <td></td>
                 <td></td>
               </tr>
@@ -259,6 +283,20 @@ export default class Calculator extends React.Component {
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="education" className="form-control" min="0" max="100" value={this.state.expenses.education} />
                       <p className="ml-2 mb-0">{`${this.state.expenses.education}%`}</p>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="services">Services</label>
+                    <div className="d-flex align-items-center">
+                      <input onChange={this.handleChange} type="range" id="services" className="form-control" min="0" max="100" value={this.state.expenses.services} />
+                      <p className="ml-2 mb-0">{`${this.state.expenses.services}%`}</p>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="misc">Misc.</label>
+                    <div className="d-flex align-items-center">
+                      <input onChange={this.handleChange} type="range" id="misc" className="form-control" min="0" max="100" value={this.state.expenses.misc} />
+                      <p className="ml-2 mb-0">{`${this.state.expenses.misc}%`}</p>
                     </div>
                   </div>
                   <div className="modal-footer">
