@@ -9,8 +9,8 @@ export default class AuthPage extends React.Component {
 
     if (user) return <Redirect to="" />;
     return (
-      <div className="container p-0">
-        <div className="navbar navbar-expand-lg navbar-dark bg-success">
+      <div>
+        <div className="navbar navbar-dark bg-success">
           <a className="navbar-brand" href="#"><i className="fas fa-piggy-bank mr-2"></i>BudgetBuddy</a>
         </div>
         <div className="container mt-5">

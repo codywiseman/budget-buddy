@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/nav';
+import Calculator from '../components/calculator';
 
 class Budgets extends React.Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class Budgets extends React.Component {
     return (
       <>
         <Navbar />
-        <h1>Budgets</h1>
+        <Calculator />
       </>
     )
   }
