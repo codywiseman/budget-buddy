@@ -49,33 +49,40 @@ export default class Auth extends React.Component {
       ? '#signup'
       : '#login'
     return (
-      <>
-        <p className="text-center">{message}</p>
-        <form className="mt-4" onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input
-            type="email"
-            name ="email"
-            className="form-control"
-            placeholder="Enter email"
-            onChange={this.handleChange} />
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-sm-9 col-md-7">
+            <p className="text-center">{message}</p>
+            <form className="mt-4" onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email address</label>
+                <input
+                type="email"
+                name ="email"
+                className="form-control"
+                placeholder="Enter email"
+                onChange={this.handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="Password"
+                onChange={this.handleChange} />
+              </div>
+              <button
+              type="submit"
+              className="btn
+              btn-success
+              btn-block mt-4">
+              Submit</button>
+            </form>
+            <small className="mt-3 text-center d-block">{account} <a href={link}>Sign up</a></small>
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-            type="password"
-            name="password"
-            className="form-control"
-            placeholder="Password"
-            onChange={this.handleChange} />
-          </div>
-          <button
-          type="submit"
-          className="btn btn-success btn-block mt-4">Submit</button>
-        </form>
-        <small className="mt-3 text-center d-block">{account} <a href={link}>Sign up</a></small>
-      </>
+        </div>
+      </div>
     )
   }
 }

@@ -202,18 +202,18 @@ export default class Calculator extends React.Component {
                     <small className="text-muted d-block mb-2">
                       Income after taxes
                     </small>
-                    <input type="number" id="income" className="form-control" onChange={this.handleChange} />
+                    <input type="number" id="income" className="form-control" onChange={this.handleChange} value={this.state.income} />
                   </div>
                   <div className="form-group">
                     <label className="mb-0" htmlFor="staticEx">Monthly static costs</label>
                     <small className="text-muted d-block mb-2">
                       Rent, mortgage, insurance, subscriptions, etc.
                     </small>
-                    <input type="number" id="staticEx" className="form-control" onChange={this.handleChange} />
+                    <input type="number" id="staticEx" className="form-control" onChange={this.handleChange} value={this.state.staticEx} />
                   </div>
                   <div className="form-group">
                     <label htmlFor="income">Desired monthly savings?</label>
-                    <input type="number" id="savings" className="form-control" onChange={this.handleChange} />
+                    <input type="number" id="savings" className="form-control" onChange={this.handleChange} value={this.state.savings} />
                   </div>
                   <div className="text-center">
                     <h5>Allocate your spendings</h5>

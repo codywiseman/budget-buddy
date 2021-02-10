@@ -7,8 +7,7 @@ import Budgets from './pages/budgets';
 import Transactions from './pages/transactions';
 import Reports from './pages/reports';
 import AuthPage from './pages/authPage';
-import getAccessToken from './lib/get-access'
-
+import getAccessToken from './lib/get-access';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,22 +18,24 @@ export default class App extends React.Component {
       route: parseRoute(window.location.hash),
       linkToken: null,
       accessToken: null
-    }
-  this.renderPage = this.renderPage.bind(this);
-  this.handleSignIn = this.handleSignIn.bind(this);
-  this.handleLinkToken = this.handleLinkToken.bind(this);
+    };
+    this.renderPage = this.renderPage.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleLinkToken = this.handleLinkToken.bind(this);
   }
+
   componentDidMount() {
     window.addEventListener('hashchange', () => {
       this.setState({
         route: parseRoute(window.location.hash)
-      })
-    })
+      });
+    });
     const user = window.localStorage.getItem('email');
     const userId = window.localStorage.getItem('userId');
     const accessToken = window.localStorage.getItem('accessToken');
-    this.setState ({ user, userId, accessToken })
+    this.setState({ user, userId, accessToken });
   }
+
   handleSignIn(result) {
     const { email, userId } = result;
     const accessToken = getAccessToken(email);
@@ -42,35 +43,38 @@ export default class App extends React.Component {
     window.localStorage.setItem('accessToken', accessToken);
     window.localStorage.setItem('userId', userId);
     this.setState({
-      user: email ,
+      user: email,
       userId: userId,
       accessToken: accessToken
     });
   }
+
   handleLinkToken(token) {
-    this.setState({linkToken: token})
+    this.setState({ linkToken: token });
   }
+
   renderPage() {
-    const { path } = this.state.route
-    if(path === '') {
-      return <Home />
+    const { path } = this.state.route;
+    if (path === '') {
+      return <Home />;
     }
     if (path === 'login' || path === 'signup' || !this.state.user) {
       return <AuthPage />;
     }
     if (path === 'accounts') {
-      return <Accounts />
+      return <Accounts />;
     }
     if (path === 'budget') {
-      return <Budgets />
+      return <Budgets />;
     }
     if (path === 'transactions') {
-      return <Transactions />
+      return <Transactions />;
     }
     if (path === 'reports') {
-      return <Reports />
+      return <Reports />;
     }
   }
+
   render() {
     const { user, route, linkToken, accessToken, userId } = this.state;
     const { handleSignIn, handleLinkToken } = this;
@@ -81,6 +85,6 @@ export default class App extends React.Component {
           {this.renderPage()}
         </>
       </AppContext.Provider>
-    )
+    );
   }
 }
