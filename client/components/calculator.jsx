@@ -57,7 +57,7 @@ export default class Calculator extends React.Component {
         return
       } else {
          const { education, entertainment, food, healthcare, personal, travel, services, misc } = data
-         this.setState({ expenses: {education, entertainment, food, healthcare, personal, travel}})
+         this.setState({ expenses: {education, entertainment, food, healthcare, personal, travel, services, misc}})
       }
     })
     .catch(err => console.log('ERROR'))
@@ -146,7 +146,7 @@ export default class Calculator extends React.Component {
          </div>
         </div>
         <div className="mt-2">
-          <table className="table table-striped text-center table-responsive-sm">
+          <table className="table table-striped text-center table-responsive-xs">
             <thead>
               <tr>
                 <th scope="col">Category</th>

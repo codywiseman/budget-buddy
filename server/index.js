@@ -358,6 +358,30 @@ app.post('/api/budgetbuddy/save_transactions', (req, res, next) => {
     })
     .catch(err => next(err))
 })
+
+app.post('/api/budgetbuddy/export_transactions', (req, res, next) => {
+  const { userId } = req.body;
+  if (!userId) {
+    throw new ClientError(400, 'userId required');
+  }
+  const sql =  `
+    select row_to_json("transactions")
+    from "transactions"
+    where "userId" = $1
+    `;
+    const params = [userId]
+    db.query(sql, params)
+      .then(response => {
+        const row_to_json = response.rows
+        const transactions = [];
+        row_to_json.map(item => {
+          transactions.push(item['row_to_json'])
+        })
+        res.status(200).send(transactions);
+      })
+      .catch(err => next(err))
+  })
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {

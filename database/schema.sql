@@ -72,7 +72,7 @@ CREATE TABLE "budgetCategories" (
 	"personal" integer NOT NULL,
 	"education" integer NOT NULL,
 	"services" integer NOT NULL,
-	"Misc" integer NOT NULL,
+	"misc" integer NOT NULL,
 	CONSTRAINT "budgetCategories_pk" PRIMARY KEY ("itemId")
 ) WITH (
   OIDS=FALSE
