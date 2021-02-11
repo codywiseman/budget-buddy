@@ -188,17 +188,17 @@ app.post('/api/budgetbuddy/create_budget', (req, res, next) => {
 
 
 app.post('/api/budgetbuddy/budget_category', (req, res, next) => {
-  const { itemId, userId, food, travel, entertainment, healthcare, personal, education } = req.body;
+  const { itemId, userId, food, travel, entertainment, healthcare, personal, education, services, misc } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
   }
   const sql = `
-    insert into "budgetCategories" ("itemId", "createdBy", "food", "travel", "entertainment", "healthcare", "personal", "education")
-    values ($1, $2, $3, $4, $5, $6, $7, $8)
+    insert into "budgetCategories" ("itemId", "createdBy", "food", "travel", "entertainment", "healthcare", "personal", "education", "services", "misc")
+    values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     on conflict ("itemId")
-    do update set "food" = $3, "travel" = $4, "entertainment" = $5, "healthcare" = $6, "personal" = $7, "education" = $8
+    do update set "food" = $3, "travel" = $4, "entertainment" = $5, "healthcare" = $6, "personal" = $7, "education" = $8, "services" = $9, "misc" = $10
   `;
-  const params = [itemId, userId, food, travel, entertainment, healthcare, personal, education];
+  const params = [itemId, userId, food, travel, entertainment, healthcare, personal, education, services, misc];
   db.query(sql, params)
     .then(response => {
       const budget = response.rows;
@@ -222,8 +222,13 @@ app.post('/api/budgetbuddy/income', (req, res, next) => {
   const params = [ userId ];
   db.query(sql, params)
     .then(response => {
-      const income = response.rows[0]['row_to_json'];
-      res.status(200).send(income)
+      if (response.rows.length === 0) {
+        const income = response.rows
+        res.status(200).send(income)
+      } else {
+        const income = response.rows[0]['row_to_json'];
+        res.status(200).send(income)
+      }
     })
     .catch(err => next(err))
 })
@@ -241,8 +246,13 @@ app.post('/api/budgetbuddy/expenses', (req, res, next) => {
   const params = [userId];
   db.query(sql, params)
     .then(response => {
-      const income = response.rows[0]['row_to_json'];
-      res.status(200).send(income)
+      if(response.rows.length === 0) {
+        const income = response.rows
+        res.status(200).send(income)
+      } else {
+        const income = response.rows[0]['row_to_json']
+        res.status(200).send(income)
+      }
     })
     .catch(err => next(err))
 })
@@ -304,12 +314,13 @@ app.post('/api/accounts', function (request, response, next) {
 
 // Retrieve Transactions for an Item
 
-app.get('/api/transactions', function (request, response, next) {
+app.post('/api/transactions', function (req, res, next) {
   // Pull transactions for the Item for the last 30 days
+  const { accessToken } = req.body
   const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
   const endDate = moment().format('YYYY-MM-DD');
   client.getTransactions(
-    ACCESS_TOKEN,
+    accessToken,
     startDate,
     endDate,
     {
@@ -318,16 +329,58 @@ app.get('/api/transactions', function (request, response, next) {
     },
     function (error, transactionsResponse) {
       if (error != null) {
-        prettyPrintResponse(error);
-        return response.json({
-          error,
-        });
+        return res.json({error});
       } else {
-        response.json(transactionsResponse);
+        res.json(transactionsResponse.transactions);
       }
-    },
+    }
   );
 });
+
+// upload transactions to db
+
+app.post('/api/budgetbuddy/save_transactions', (req, res, next) => {
+  const { userId, transactionId, name, month, year, date, amount } = req.body;
+  if (!userId) {
+    throw new ClientError(400, 'userId required');
+  }
+  const sql = `
+    insert into "transactions" ("transactionId", "userId", "name", "month", "year", "date", "amount")
+    values ($1, $2, $3, $4, $5, $6, $7)
+    on conflict ("transactionId")
+    do update set "name"=$3, "month"=$4, "year"=$5, "date"=$6, "amount"=$7
+  `;
+  const params = [transactionId, userId, name, month, year, date, amount];
+  db.query(sql, params)
+    .then(response => {
+      const transactions = response.rows
+      res.status(200).send(transactions);
+    })
+    .catch(err => next(err))
+})
+
+app.post('/api/budgetbuddy/export_transactions', (req, res, next) => {
+  const { userId } = req.body;
+  if (!userId) {
+    throw new ClientError(400, 'userId required');
+  }
+  const sql =  `
+    select row_to_json("transactions")
+    from "transactions"
+    where "userId" = $1
+    `;
+    const params = [userId]
+    db.query(sql, params)
+      .then(response => {
+        const row_to_json = response.rows
+        const transactions = [];
+        row_to_json.map(item => {
+          transactions.push(item['row_to_json'])
+        })
+        res.status(200).send(transactions);
+      })
+      .catch(err => next(err))
+  })
 
 app.use(errorMiddleware);
 

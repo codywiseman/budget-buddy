@@ -1,6 +1,5 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
-import Accounts from '../pages/accounts';
 
 export default class Navbar extends React.Component {
   constructor(props) {

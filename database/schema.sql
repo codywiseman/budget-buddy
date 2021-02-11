@@ -34,13 +34,14 @@ CREATE TABLE "accounts" (
 
 
 CREATE TABLE "transactions" (
-	"transactionId" serial NOT NULL,
+	"transactionId" TEXT NOT NULL,
 	"userId" integer NOT NULL,
 	"name" TEXT NOT NULL,
-	"date" DATE NOT NULL,
+	"date" TEXT NOT NULL,
+	"month" TEXT NOT NULL,
+	"year" integer NOT NULL,
 	"amount" DECIMAL NOT NULL,
-	"category" TEXT NOT NULL,
-	"included" BOOLEAN NOT NULL,
+	"category" TEXT,
 	CONSTRAINT "transactions_pk" PRIMARY KEY ("transactionId")
 ) WITH (
   OIDS=FALSE
@@ -70,6 +71,8 @@ CREATE TABLE "budgetCategories" (
 	"healthcare" integer NOT NULL,
 	"personal" integer NOT NULL,
 	"education" integer NOT NULL,
+	"services" integer NOT NULL,
+	"misc" integer NOT NULL,
 	CONSTRAINT "budgetCategories_pk" PRIMARY KEY ("itemId")
 ) WITH (
   OIDS=FALSE
