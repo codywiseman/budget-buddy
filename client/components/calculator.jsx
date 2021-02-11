@@ -1,12 +1,24 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
 import toDollar from '../lib/toDollar';
+import { parseMonth, parseYear } from '../lib/parseDate'
 
 export default class Calculator extends React.Component {
   constructor(props) {
     super(props)
+    this.spent = {
+      food: 0,
+      travel: 0,
+      entertainment: 0,
+      healthcare: 0,
+      personal: 0,
+      education: 0,
+      services: 0,
+      misc: 0
+    }
     this.state = {
       month: null,
+      year: null,
       income: 0,
       staticEx: 0,
       savings: 0,
@@ -24,6 +36,7 @@ export default class Calculator extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.remainingBudget = this.remainingBudget.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.addTotalSpent = this.addTotalSpent.bind(this)
   }
   componentDidMount() {
     const userId = window.localStorage.getItem('userId');
@@ -56,8 +69,26 @@ export default class Calculator extends React.Component {
       if(data.length === 0) {
         return
       } else {
-         const { education, entertainment, food, healthcare, personal, travel, services, misc } = data
-         this.setState({ expenses: {education, entertainment, food, healthcare, personal, travel, services, misc}})
+         const {
+           education,
+           entertainment,
+           food,
+           healthcare,
+           personal,
+           travel,
+           services,
+           misc } = data;
+         this.setState({
+           expenses: {
+             education,
+             entertainment,
+             food,
+             healthcare,
+             personal,
+             travel,
+             services,
+             misc
+          }});
       }
     })
     .catch(err => console.log('ERROR'))
@@ -70,7 +101,10 @@ export default class Calculator extends React.Component {
       this.setState({ expenses: copyExpenses })
     }
     if(event.target.type === 'month') {
-      this.setState({month: event.target.value})
+      const month = parseMonth(event.target.value)
+      const year = parseYear(event.target.value)
+      this.setState({month, year})
+      this.addTotalSpent()
     }
     if (event.target.type === 'number') {
       const targetId = event.target.id;
@@ -116,6 +150,24 @@ export default class Calculator extends React.Component {
     })
     .catch(err => console.log('ERROR'))
   }
+  addTotalSpent() {
+    fetch('api/budgetbuddy/export_transactions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: this.context.userId })
+    })
+      .then(response => response.json())
+      .then(transactionData => {
+        transactionData.map(item => {
+          if(this.state.month === item.month && this.state.year === item.year) {
+            this.spent[item.category] = this.spent[item.category] + item.amount
+         }
+        })
+      })
+      .catch(err => console.log('ERROR'))
+  }
   remainingBudget() {
     let remains = 100;
     const expenses = {...this.state.expenses}
@@ -125,6 +177,7 @@ export default class Calculator extends React.Component {
     return remains
   }
   render() {
+    console.log(this.spent)
     const remainingBudget = this.remainingBudget();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
     return(

@@ -7,6 +7,7 @@ const plaid = require('plaid');
 const util = require('util');
 const moment = require('moment');
 const pg = require('pg');
+const { response } = require('express');
 
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
 const PLAID_SECRET = process.env.PLAID_SECRET;
@@ -359,6 +360,8 @@ app.post('/api/budgetbuddy/save_transactions', (req, res, next) => {
     .catch(err => next(err))
 })
 
+//export transaction data from db
+
 app.post('/api/budgetbuddy/export_transactions', (req, res, next) => {
   const { userId } = req.body;
   if (!userId) {
@@ -381,6 +384,28 @@ app.post('/api/budgetbuddy/export_transactions', (req, res, next) => {
       })
       .catch(err => next(err))
   })
+
+// update category
+
+app.put('/api/budgetbuddy/category', (req, res, next) => {
+  const {transactionId, category} = req.body
+  if (!category) {
+    throw new ClientError(400, ' required');
+  }
+  const sql = `
+    update "transactions"
+    set "category" = $1
+    where "transactionId" = $2
+    returning *
+  `
+  const params = [category, transactionId];
+  db.query(sql, params)
+    .then(response => {
+      const category = response.rows;
+      res.status(200).send(category);
+    })
+    .catch(err => next(err))
+})
 
 app.use(errorMiddleware);
 

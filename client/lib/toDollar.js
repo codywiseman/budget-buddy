@@ -1,3 +1,4 @@
 export default function toDollar(value) {
-  return '$' + value.toFixed(2)
+  const parsed = parseInt(value)
+  return '$' + parsed.toFixed(2)
 }

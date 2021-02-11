@@ -63,11 +63,27 @@ export default class Categorize extends React.Component {
       body: JSON.stringify({userId: this.context.userId})
     })
     .then(response => response.json())
-    .then(transactionData => this.setState({transactions: transactionData}))
+    .then(transactionData => this.setState({ transactions: transactionData }))
     .catch(err => console.log('ERROR'))
   }
   handleChange() {
-
+    const transactionId = event.target.closest('select').id;
+    const category = event.target.value;
+    fetch('/api/budgetbuddy/category', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({transactionId, category})
+    })
+    .then(response => response.json())
+    .then(category => {
+      const transactions = [...this.state.transactions];
+      const index = transactions.findIndex(x => x.transactionId === transactionId);
+      transactions[index] = category[0];
+      this.setState({transactions})
+    })
+    .catch(err => console.log('ERROR'))
   }
   render() {
     if(this.state.transactions.length === 0) {
@@ -86,16 +102,16 @@ export default class Categorize extends React.Component {
                 <div className="d-flex justify-content-between border rounded">
                   <div className="ml-3 mt-2 mb-2 col-7">
                     <p>{item.name}</p>
-                    <select className="form-control" id={item.transaction_id} defaultValue="default" onChange={this.handleChange}>
+                    <select className="form-control" id={item.transactionId} value={item.category === null ? 'default': item.category} onChange={this.handleChange}>
                       <option value="default" disabled>Category</option>
-                      <option>Food &amp; Drink</option>
-                      <option>Travel</option>
-                      <option>Entertainment</option>
-                      <option>Personal</option>
-                      <option>Healthcare</option>
-                      <option>Education</option>
-                      <option>Services</option>
-                      <option>Misc.</option>
+                      <option value="food">Food &amp; Drink</option>
+                      <option value="travel">Travel</option>
+                      <option value="entertainment">Entertainment</option>
+                      <option value="personal">Personal</option>
+                      <option value="healthcare">Healthcare</option>
+                      <option value="education">Education</option>
+                      <option value="services">Services</option>
+                      <option value="misc">Misc.</option>
                     </select>
                   </div>
                   <div className="mr-3 mt-2 mb-2 col-5">
