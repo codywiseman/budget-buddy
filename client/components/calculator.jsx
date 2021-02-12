@@ -1,12 +1,15 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
 import toDollar from '../lib/toDollar';
+import { parseMonth, parseYear, currentDate } from '../lib/parseDate'
 
 export default class Calculator extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      month: null,
+      month: parseMonth(currentDate()),
+      year: parseYear(currentDate()),
+      date: currentDate(),
       income: 0,
       staticEx: 0,
       savings: 0,
@@ -19,48 +22,35 @@ export default class Calculator extends React.Component {
         education: 0,
         services: 0,
         misc: 0
+      },
+      spent: {
+        food: 0,
+        travel: 0,
+        entertainment: 0,
+        healthcare: 0,
+        personal: 0,
+        education: 0,
+        services: 0,
+        misc: 0
       }
     }
     this.handleChange = this.handleChange.bind(this)
     this.remainingBudget = this.remainingBudget.bind(this)
+    this.totalspent = this.totalSpent.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.addTotalSpent = this.addTotalSpent.bind(this)
+    this.editBudget = this.editBudget.bind(this)
+    this.getIncome = this.getIncome.bind(this)
+    this.getExpenses = this.getExpenses.bind(this)
   }
   componentDidMount() {
-    const userId = window.localStorage.getItem('userId');
-    fetch('/api/budgetbuddy/income', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.length === 0) {
-        return
-      } else {
-        const { income, savings, static: staticEx } = data
-        this.setState({ income, savings, staticEx })
-      }
-    })
-    .catch(err => console.log('ERROR'))
-    fetch('/api/budgetbuddy/expenses', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.length === 0) {
-        return
-      } else {
-         const { education, entertainment, food, healthcare, personal, travel, services, misc } = data
-         this.setState({ expenses: {education, entertainment, food, healthcare, personal, travel, services, misc}})
-      }
-    })
-    .catch(err => console.log('ERROR'))
+    this.getIncome()
+    this.getExpenses()
+    this.addTotalSpent()
+  }
+  handleSubmit() {
+    event.preventDefault()
+    this.editBudget();
   }
   handleChange(event) {
     if(event.target.type === 'range') {
@@ -70,16 +60,75 @@ export default class Calculator extends React.Component {
       this.setState({ expenses: copyExpenses })
     }
     if(event.target.type === 'month') {
-      this.setState({month: event.target.value})
+      const month = parseMonth(event.target.value)
+      const year = parseYear(event.target.value)
+      this.setState({month, year})
+      this.addTotalSpent();
     }
     if (event.target.type === 'number') {
       const targetId = event.target.id;
       this.setState({[targetId]: event.target.value})
     }
   }
-  handleSubmit() {
-    event.preventDefault()
-    fetch('/api/budgetbuddy/create_budget',{
+  getIncome() {
+    fetch('/api/budgetbuddy/income', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: this.context.userId })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          return
+        } else {
+          const { income, savings, static: staticEx } = data
+          this.setState({ income, savings, staticEx })
+        }
+      })
+      .catch(err => console.log('ERROR'))
+  }
+  getExpenses() {
+    fetch('/api/budgetbuddy/expenses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: this.context.userId })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          return
+        } else {
+          const {
+            education,
+            entertainment,
+            food,
+            healthcare,
+            personal,
+            travel,
+            services,
+            misc } = data;
+          this.setState({
+            expenses: {
+              education,
+              entertainment,
+              food,
+              healthcare,
+              personal,
+              travel,
+              services,
+              misc
+            }
+          });
+        }
+      })
+      .catch(err => console.log('ERROR'))
+  }
+  editBudget() {
+    fetch('/api/budgetbuddy/create_budget', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -92,7 +141,7 @@ export default class Calculator extends React.Component {
         staticEx: this.state.staticEx,
       })
     })
-    .catch(err => console.log('ERROR'))
+      .catch(err => console.log('ERROR'))
     fetch('/api/budgetbuddy/budget_category', {
       method: 'POST',
       headers: {
@@ -111,10 +160,41 @@ export default class Calculator extends React.Component {
         misc: this.state.expenses.misc
       })
     })
-    .then(() => {
-      window.location.reload(true)
+      .then(() => {
+        window.location.reload(true)
+      })
+      .catch(err => console.log('ERROR'))
+  }
+  addTotalSpent() {
+    fetch('api/budgetbuddy/export_transactions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: this.context.userId })
     })
-    .catch(err => console.log('ERROR'))
+      .then(response => response.json())
+      .then(transactionData => {
+        const spent = {
+          food: 0,
+          travel: 0,
+          entertainment: 0,
+          healthcare: 0,
+          personal: 0,
+          education: 0,
+          services: 0,
+          misc: 0
+        }
+        transactionData.map(item => {
+          if(item.category === 'notIncl'){
+            return
+          } else if(this.state.month === item.month && this.state.year === item.year) {
+            spent[item.category] = spent[item.category] + item.amount
+          }
+        })
+        this.setState({spent})
+      })
+      .catch(err => console.log('ERROR'))
   }
   remainingBudget() {
     let remains = 100;
@@ -124,29 +204,38 @@ export default class Calculator extends React.Component {
     }
     return remains
   }
+  totalSpent() {
+    let spent = 0;
+    const spendings = { ...this.state.spent }
+    for (let x in spendings) {
+      spent += spendings[x]
+    }
+    return spent
+  }
   render() {
     const remainingBudget = this.remainingBudget();
+    const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
     return(
       <>
         <div className="container">
           <div className="form-group mt-4">
-            <label htmlFor="start">Display Budget For: </label>
-            <input className="form-control d-inline" type="month" id="start" name="start" onChange={this.handleChange}/>
+            <label>Display Budget For: </label>
+            <input className="form-control d-inline" type="month" defaultValue={this.state.date} onChange={this.handleChange}/>
           </div>
-          <div className="d-flex justify-content-around text-center">
+          <div className="d-flex justify-content-around text-left-md text-center">
             <div>
               <h6>Available to budget:</h6>
               <h3>{toDollar(budget * (remainingBudget / 100))}</h3>
             </div>
             <div>
               <h6>Remaining spendings:</h6>
-              <h3>$0</h3>
+              <h3>{toDollar(budget - totalSpent)}</h3>
             </div>
          </div>
         </div>
         <div className="mt-2">
-          <table className="table table-striped text-center table-responsive-xs">
+          <table className="table table-striped text-center table-responsive-md">
             <thead>
               <tr>
                 <th scope="col">Category</th>
@@ -159,50 +248,50 @@ export default class Calculator extends React.Component {
               <tr>
                 <td>Food &amp; Drink</td>
                 <td>{toDollar(budget * (this.state.expenses.food / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.food)}</td>
+                <td>{toDollar(budget * (this.state.expenses.food / 100) - this.state.spent.food)}</td>
               </tr>
               <tr>
                 <td>Travel</td>
                 <td>{toDollar(budget * (this.state.expenses.travel / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.travel)}</td>
+                <td>{toDollar(budget * (this.state.expenses.travel / 100) - this.state.spent.travel)}</td>
               </tr>
               <tr>
                 <td>Entertainment</td>
                 <td>{toDollar(budget * (this.state.expenses.entertainment / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.entertainment)}</td>
+                <td>{toDollar(budget * (this.state.expenses.entertainment / 100) - this.state.spent.entertainment)}</td>
               </tr>
               <tr>
                 <td>Healthcare</td>
                 <td>{toDollar(budget * (this.state.expenses.healthcare / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.healthcare)}</td>
+                <td>{toDollar(budget * (this.state.expenses.healthcare / 100) - this.state.spent.healthcare)}</td>
               </tr>
               <tr>
                 <td>Personal</td>
                 <td>{toDollar(budget * (this.state.expenses.personal / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.personal)}</td>
+                <td>{toDollar(budget * (this.state.expenses.personal / 100) - this.state.spent.personal)}</td>
               </tr>
               <tr>
                 <td>Education</td>
                 <td>{toDollar(budget * (this.state.expenses.education / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.education)}</td>
+                <td>{toDollar(budget * (this.state.expenses.education / 100) - this.state.spent.education)}</td>
               </tr>
               <tr>
                 <td>Services</td>
                 <td>{toDollar(budget * (this.state.expenses.services / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.services)}</td>
+                <td>{toDollar(budget * (this.state.expenses.services / 100) - this.state.spent.services)}</td>
               </tr>
               <tr>
                 <td>Misc</td>
                 <td>{toDollar(budget * (this.state.expenses.misc / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.misc)}</td>
+                <td>{toDollar(budget * (this.state.expenses.misc / 100) - this.state.spent.misc)}</td>
               </tr>
             </tbody>
           </table>

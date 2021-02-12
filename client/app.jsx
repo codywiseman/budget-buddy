@@ -5,7 +5,6 @@ import Home from './pages/home';
 import Accounts from './pages/accounts';
 import Budgets from './pages/budgets';
 import Transactions from './pages/transactions';
-import Reports from './pages/reports';
 import AuthPage from './pages/authPage';
 import getAccessToken from './lib/get-access';
 
@@ -69,9 +68,6 @@ export default class App extends React.Component {
     }
     if (path === 'transactions') {
       return <Transactions />;
-    }
-    if (path === 'reports') {
-      return <Reports />;
     }
   }
 
