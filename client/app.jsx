@@ -3,7 +3,6 @@ import parseRoute from './lib/parse-route';
 import AppContext from './lib/app-context';
 import Home from './pages/home';
 import Accounts from './pages/accounts';
-import Budgets from './pages/budgets';
 import Transactions from './pages/transactions';
 import AuthPage from './pages/authPage';
 import getAccessToken from './lib/get-access';
@@ -62,9 +61,6 @@ export default class App extends React.Component {
     }
     if (path === 'accounts') {
       return <Accounts />;
-    }
-    if (path === 'budget') {
-      return <Budgets />;
     }
     if (path === 'transactions') {
       return <Transactions />;

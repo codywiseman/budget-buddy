@@ -22,7 +22,6 @@ export default class Navbar extends React.Component {
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav">
             <a className="nav-item nav-link" href="#">Home</a>
-            <a className="nav-item nav-link" href="#budget">Budget</a>
             <a className="nav-item nav-link" href="#transactions">Transactions</a>
             <a className="nav-item nav-link" href="#accounts">Accounts</a>
           </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from '../components/nav';
 import Redirect from '../components/redirect';
-import AppContext from '../lib/app-context'
+import AppContext from '../lib/app-context';
+import Calculator from '../components/calculator'
 
 export default class Home extends React.Component {
   render() {
@@ -11,6 +12,7 @@ export default class Home extends React.Component {
     return (
       <>
         <Navbar />
+        <Calculator />
       </>
     )
   }
