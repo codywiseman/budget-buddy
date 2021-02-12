@@ -175,7 +175,6 @@ export default class Calculator extends React.Component {
     })
       .then(response => response.json())
       .then(transactionData => {
-        console.log('spent', transactionData)
         const spent = {
           food: 0,
           travel: 0,
@@ -214,7 +213,6 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
-    console.log(this.state)
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
