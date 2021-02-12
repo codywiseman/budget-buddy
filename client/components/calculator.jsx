@@ -6,16 +6,6 @@ import { parseMonth, parseYear } from '../lib/parseDate'
 export default class Calculator extends React.Component {
   constructor(props) {
     super(props)
-    this.spent = {
-      food: 0,
-      travel: 0,
-      entertainment: 0,
-      healthcare: 0,
-      personal: 0,
-      education: 0,
-      services: 0,
-      misc: 0
-    }
     this.state = {
       month: null,
       year: null,
@@ -31,10 +21,21 @@ export default class Calculator extends React.Component {
         education: 0,
         services: 0,
         misc: 0
+      },
+      spent: {
+        food: 0,
+        travel: 0,
+        entertainment: 0,
+        healthcare: 0,
+        personal: 0,
+        education: 0,
+        services: 0,
+        misc: 0
       }
     }
     this.handleChange = this.handleChange.bind(this)
     this.remainingBudget = this.remainingBudget.bind(this)
+    this.totalspent = this.totalSpent.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.addTotalSpent = this.addTotalSpent.bind(this)
   }
@@ -160,11 +161,24 @@ export default class Calculator extends React.Component {
     })
       .then(response => response.json())
       .then(transactionData => {
+        const spent = {
+          food: 0,
+          travel: 0,
+          entertainment: 0,
+          healthcare: 0,
+          personal: 0,
+          education: 0,
+          services: 0,
+          misc: 0
+        }
         transactionData.map(item => {
-          if(this.state.month === item.month && this.state.year === item.year) {
-            this.spent[item.category] = this.spent[item.category] + item.amount
-         }
+          if(item.category === 'notIncl'){
+            return
+          } else if(this.state.month === item.month && this.state.year === item.year) {
+            spent[item.category] = spent[item.category] + item.amount
+          }
         })
+        this.setState({spent})
       })
       .catch(err => console.log('ERROR'))
   }
@@ -176,9 +190,17 @@ export default class Calculator extends React.Component {
     }
     return remains
   }
+  totalSpent() {
+    let spent = 0;
+    const spendings = { ...this.state.spent }
+    for (let x in spendings) {
+      spent += spendings[x]
+    }
+    return spent
+  }
   render() {
-    console.log(this.spent)
     const remainingBudget = this.remainingBudget();
+    const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
     return(
       <>
@@ -194,12 +216,12 @@ export default class Calculator extends React.Component {
             </div>
             <div>
               <h6>Remaining spendings:</h6>
-              <h3>$0</h3>
+              <h3>{toDollar(budget - totalSpent)}</h3>
             </div>
          </div>
         </div>
         <div className="mt-2">
-          <table className="table table-striped text-center table-responsive-xs">
+          <table className="table table-striped text-center table-responsive-md">
             <thead>
               <tr>
                 <th scope="col">Category</th>
@@ -212,50 +234,50 @@ export default class Calculator extends React.Component {
               <tr>
                 <td>Food &amp; Drink</td>
                 <td>{toDollar(budget * (this.state.expenses.food / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.food)}</td>
+                <td>{toDollar(budget * (this.state.expenses.food / 100) - this.state.spent.food)}</td>
               </tr>
               <tr>
                 <td>Travel</td>
                 <td>{toDollar(budget * (this.state.expenses.travel / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.travel)}</td>
+                <td>{toDollar(budget * (this.state.expenses.travel / 100) - this.state.spent.travel)}</td>
               </tr>
               <tr>
                 <td>Entertainment</td>
                 <td>{toDollar(budget * (this.state.expenses.entertainment / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.entertainment)}</td>
+                <td>{toDollar(budget * (this.state.expenses.entertainment / 100) - this.state.spent.entertainment)}</td>
               </tr>
               <tr>
                 <td>Healthcare</td>
                 <td>{toDollar(budget * (this.state.expenses.healthcare / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.healthcare)}</td>
+                <td>{toDollar(budget * (this.state.expenses.healthcare / 100) - this.state.spent.healthcare)}</td>
               </tr>
               <tr>
                 <td>Personal</td>
                 <td>{toDollar(budget * (this.state.expenses.personal / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.personal)}</td>
+                <td>{toDollar(budget * (this.state.expenses.personal / 100) - this.state.spent.personal)}</td>
               </tr>
               <tr>
                 <td>Education</td>
                 <td>{toDollar(budget * (this.state.expenses.education / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.education)}</td>
+                <td>{toDollar(budget * (this.state.expenses.education / 100) - this.state.spent.education)}</td>
               </tr>
               <tr>
                 <td>Services</td>
                 <td>{toDollar(budget * (this.state.expenses.services / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.services)}</td>
+                <td>{toDollar(budget * (this.state.expenses.services / 100) - this.state.spent.services)}</td>
               </tr>
               <tr>
                 <td>Misc</td>
                 <td>{toDollar(budget * (this.state.expenses.misc / 100))}</td>
-                <td></td>
-                <td></td>
+                <td>{toDollar(this.state.spent.misc)}</td>
+                <td>{toDollar(budget * (this.state.expenses.misc / 100) - this.state.spent.misc)}</td>
               </tr>
             </tbody>
           </table>

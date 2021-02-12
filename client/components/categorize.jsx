@@ -112,6 +112,7 @@ export default class Categorize extends React.Component {
                       <option value="education">Education</option>
                       <option value="services">Services</option>
                       <option value="misc">Misc.</option>
+                      <option value="notIncl">Not Included in Budget</option>
                     </select>
                   </div>
                   <div className="mr-3 mt-2 mb-2 col-5">
@@ -122,7 +123,7 @@ export default class Categorize extends React.Component {
               </div>
             )}
           </div>
-          <div className="text-center mb-2 mt-2">
+          <div className="text-center mt-2 mb-2">
             <button onClick={this.getTransactions} className="btn btn-success">Refresh Transactions</button>
           </div>
         </div>

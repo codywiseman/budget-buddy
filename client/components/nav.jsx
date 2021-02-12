@@ -24,7 +24,6 @@ export default class Navbar extends React.Component {
             <a className="nav-item nav-link" href="#">Home</a>
             <a className="nav-item nav-link" href="#budget">Budget</a>
             <a className="nav-item nav-link" href="#transactions">Transactions</a>
-            <a className="nav-item nav-link" href="#reports">Reports</a>
             <a className="nav-item nav-link" href="#accounts">Accounts</a>
           </div>
         </div>

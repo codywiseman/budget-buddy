@@ -5,24 +5,24 @@ import Redirect from '../components/redirect';
 
 export default class AuthPage extends React.Component {
   render() {
-    if (!this.context.user) {
-      return <Redirect to="login" />
-    }
     const { user, route, handleSignIn } = this.context;
-    if (user) return <Redirect to="" />;
-    return (
-      <div>
-        <div className="navbar navbar-dark bg-success">
-          <a className="navbar-brand" href="#"><i className="fas fa-piggy-bank mr-2"></i>BudgetBuddy</a>
+    if (user) {
+      return <Redirect to="" />;
+    } else {
+      return (
+        <div>
+          <div className="navbar navbar-dark bg-success">
+            <a className="navbar-brand" href="#"><i className="fas fa-piggy-bank mr-2"></i>BudgetBuddy</a>
+          </div>
+          <div className="container mt-5">
+            <h4 className="text-center">Welcome to BudgetBuddy!</h4>
+            <Auth
+              action={route}
+              onSignIn={handleSignIn} />
+          </div>
         </div>
-        <div className="container mt-5">
-          <h4 className="text-center">Welcome to BudgetBuddy!</h4>
-          <Auth
-          action={this.context.route}
-          onSignIn={this.context.handleSignIn} />
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }
 

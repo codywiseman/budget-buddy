@@ -79,7 +79,7 @@ export default class Auth extends React.Component {
               btn-block mt-4">
               Submit</button>
             </form>
-            <small className="mt-3 text-center d-block">{account} <a href={link}>Sign up</a></small>
+            <small className="mt-3 text-center d-block">{account} <a href={link}>Click Here</a></small>
           </div>
         </div>
       </div>
