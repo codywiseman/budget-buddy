@@ -1,7 +1,7 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
 import toDollar from '../lib/toDollar';
-import { parseMonth, parseYear } from '../lib/parseDate'
+import { parseMonth, parseYear, currentDate } from '../lib/parseDate'
 
 export default class Calculator extends React.Component {
   constructor(props) {
@@ -206,10 +206,10 @@ export default class Calculator extends React.Component {
       <>
         <div className="container">
           <div className="form-group mt-4">
-            <label htmlFor="start">Display Budget For: </label>
-            <input className="form-control d-inline" type="month" id="start" name="start" onChange={this.handleChange}/>
+            <label>Display Budget For: </label>
+            <input className="form-control d-inline" type="month" value={currentDate()} onChange={this.handleChange}/>
           </div>
-          <div className="d-flex justify-content-around text-center">
+          <div className="d-flex justify-content-around text-left-md text-center">
             <div>
               <h6>Available to budget:</h6>
               <h3>{toDollar(budget * (remainingBudget / 100))}</h3>
