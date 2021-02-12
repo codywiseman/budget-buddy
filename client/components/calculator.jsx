@@ -7,8 +7,9 @@ export default class Calculator extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      month: null,
-      year: null,
+      month: parseMonth(currentDate()),
+      year: parseYear(currentDate()),
+      date: currentDate(),
       income: 0,
       staticEx: 0,
       savings: 0,
@@ -38,61 +39,18 @@ export default class Calculator extends React.Component {
     this.totalspent = this.totalSpent.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.addTotalSpent = this.addTotalSpent.bind(this)
+    this.editBudget = this.editBudget.bind(this)
+    this.getIncome = this.getIncome.bind(this)
+    this.getExpenses = this.getExpenses.bind(this)
   }
   componentDidMount() {
-    const userId = window.localStorage.getItem('userId');
-    fetch('/api/budgetbuddy/income', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.length === 0) {
-        return
-      } else {
-        const { income, savings, static: staticEx } = data
-        this.setState({ income, savings, staticEx })
-      }
-    })
-    .catch(err => console.log('ERROR'))
-    fetch('/api/budgetbuddy/expenses', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.length === 0) {
-        return
-      } else {
-         const {
-           education,
-           entertainment,
-           food,
-           healthcare,
-           personal,
-           travel,
-           services,
-           misc } = data;
-         this.setState({
-           expenses: {
-             education,
-             entertainment,
-             food,
-             healthcare,
-             personal,
-             travel,
-             services,
-             misc
-          }});
-      }
-    })
-    .catch(err => console.log('ERROR'))
+    this.getIncome()
+    this.getExpenses()
+    this.addTotalSpent()
+  }
+  handleSubmit() {
+    event.preventDefault()
+    this.editBudget();
   }
   handleChange(event) {
     if(event.target.type === 'range') {
@@ -105,16 +63,72 @@ export default class Calculator extends React.Component {
       const month = parseMonth(event.target.value)
       const year = parseYear(event.target.value)
       this.setState({month, year})
-      this.addTotalSpent()
+      this.addTotalSpent();
     }
     if (event.target.type === 'number') {
       const targetId = event.target.id;
       this.setState({[targetId]: event.target.value})
     }
   }
-  handleSubmit() {
-    event.preventDefault()
-    fetch('/api/budgetbuddy/create_budget',{
+  getIncome() {
+    fetch('/api/budgetbuddy/income', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: this.context.userId })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          return
+        } else {
+          const { income, savings, static: staticEx } = data
+          this.setState({ income, savings, staticEx })
+        }
+      })
+      .catch(err => console.log('ERROR'))
+  }
+  getExpenses() {
+    fetch('/api/budgetbuddy/expenses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: this.context.userId })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          return
+        } else {
+          const {
+            education,
+            entertainment,
+            food,
+            healthcare,
+            personal,
+            travel,
+            services,
+            misc } = data;
+          this.setState({
+            expenses: {
+              education,
+              entertainment,
+              food,
+              healthcare,
+              personal,
+              travel,
+              services,
+              misc
+            }
+          });
+        }
+      })
+      .catch(err => console.log('ERROR'))
+  }
+  editBudget() {
+    fetch('/api/budgetbuddy/create_budget', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -127,7 +141,7 @@ export default class Calculator extends React.Component {
         staticEx: this.state.staticEx,
       })
     })
-    .catch(err => console.log('ERROR'))
+      .catch(err => console.log('ERROR'))
     fetch('/api/budgetbuddy/budget_category', {
       method: 'POST',
       headers: {
@@ -146,10 +160,10 @@ export default class Calculator extends React.Component {
         misc: this.state.expenses.misc
       })
     })
-    .then(() => {
-      window.location.reload(true)
-    })
-    .catch(err => console.log('ERROR'))
+      .then(() => {
+        window.location.reload(true)
+      })
+      .catch(err => console.log('ERROR'))
   }
   addTotalSpent() {
     fetch('api/budgetbuddy/export_transactions', {
@@ -161,6 +175,7 @@ export default class Calculator extends React.Component {
     })
       .then(response => response.json())
       .then(transactionData => {
+        console.log('spent', transactionData)
         const spent = {
           food: 0,
           travel: 0,
@@ -199,6 +214,7 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
+    console.log(this.state)
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
@@ -207,7 +223,7 @@ export default class Calculator extends React.Component {
         <div className="container">
           <div className="form-group mt-4">
             <label>Display Budget For: </label>
-            <input className="form-control d-inline" type="month" value={currentDate()} onChange={this.handleChange}/>
+            <input className="form-control d-inline" type="month" defaultValue={this.state.date} onChange={this.handleChange}/>
           </div>
           <div className="d-flex justify-content-around text-left-md text-center">
             <div>
