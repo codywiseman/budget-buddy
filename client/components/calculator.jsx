@@ -141,7 +141,7 @@ export default class Calculator extends React.Component {
         staticEx: this.state.staticEx,
       })
     })
-      .catch(err => console.log('ERROR'))
+    .catch(err => console.log('ERROR'))
     fetch('/api/budgetbuddy/budget_category', {
       method: 'POST',
       headers: {

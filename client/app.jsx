@@ -6,6 +6,8 @@ import Accounts from './pages/accounts';
 import Transactions from './pages/transactions';
 import AuthPage from './pages/authPage';
 import getAccessToken from './lib/get-access';
+import BankLink from './pages/bankLink';
+import Redirect from './components/redirect';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -14,32 +16,39 @@ export default class App extends React.Component {
       user: null,
       userId: null,
       route: parseRoute(window.location.hash),
-      linkToken: null,
       accessToken: null
     };
     this.renderPage = this.renderPage.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
-    this.handleLinkToken = this.handleLinkToken.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener('hashchange', () => {
       this.setState({
         route: parseRoute(window.location.hash)
-      });
-    });
+      })
+    })
     const user = window.localStorage.getItem('email');
-    const userId = window.localStorage.getItem('userId');
-    const accessToken = window.localStorage.getItem('accessToken');
-    this.setState({ user, userId, accessToken });
+    if(user) {
+      fetch(`/api/budgetbuddy/user-info`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email: user})
+      })
+        .then(res => res.json())
+        .then(result => {
+          const userId = result[0].userId;
+          const accessToken = result[0].accessToken;
+          this.setState({ user, userId, accessToken })
+        })
+        .catch(err => console.log('ERROR'))
+    }
   }
-
   handleSignIn(result) {
-    const { email, userId } = result;
-    const accessToken = getAccessToken(email);
+    const { email, userId, accessToken } = result;
     window.localStorage.setItem('email', email);
-    window.localStorage.setItem('accessToken', accessToken);
-    window.localStorage.setItem('userId', userId);
     this.setState({
       user: email,
       userId: userId,
@@ -47,16 +56,12 @@ export default class App extends React.Component {
     });
   }
 
-  handleLinkToken(token) {
-    this.setState({ linkToken: token });
-  }
-
   renderPage() {
     const { path } = this.state.route;
     if (path === '') {
       return <Home />;
     }
-    if (path === 'login' || path === 'signup' || !this.state.user) {
+    if (path === 'login' || path === 'signup') {
       return <AuthPage />;
     }
     if (path === 'accounts') {
@@ -65,12 +70,16 @@ export default class App extends React.Component {
     if (path === 'transactions') {
       return <Transactions />;
     }
+    if (path === 'link') {
+       return <BankLink />
+    }
   }
 
   render() {
-    const { user, route, linkToken, accessToken, userId } = this.state;
-    const { handleSignIn, handleLinkToken } = this;
-    const contextValue = { user, route, linkToken, accessToken, userId, handleSignIn, handleLinkToken };
+    console.log(this.state)
+    const { user, route, accessToken, userId, } = this.state;
+    const { handleSignIn } = this;
+    const contextValue = { user, route, accessToken, userId, handleSignIn };
     return (
       <AppContext.Provider value={contextValue}>
         <>

@@ -6,20 +6,24 @@ export default class Balance extends React.Component {
   constructor(props) {
     super(props);
     this.state = {accounts: []}
-    this.getBalance = this.getBalance.bind(this);
+    this.getAccounts = this.getAccounts.bind(this);
     this.updateAccounts = this.updateAccounts.bind(this);
+    this.renderAccounts = this.renderAccounts.bind(this);
   }
   componentDidMount() {
+    this.getAccounts()
+  }
+  renderAccounts() {
     fetch('/api/budgetbuddy/accounts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({userId: this.context.userId,})
+      body: JSON.stringify({ userId: this.context.userId, })
     })
-    .then(response => response.json())
-    .then(account => this.setState({accounts: account}))
-    .catch(err => console.log('ERROR'))
+      .then(response => response.json())
+      .then(account => this.setState({ accounts: account }))
+      .catch(err => console.log('ERROR'))
   }
   updateAccounts(account) {
      fetch('/api/budgetbuddy/update_account_balance', {
@@ -35,9 +39,10 @@ export default class Balance extends React.Component {
           balances: account.balances.current
         })
       })
+      .then(this.renderAccounts())
       .catch(err => console.log('ERROR'))
     }
-  getBalance() {
+  getAccounts() {
     fetch('/api/accounts', {
       method: 'POST',
       headers: {
@@ -49,7 +54,6 @@ export default class Balance extends React.Component {
     .then(account => {
       const accountArray = account.accounts;
       accountArray.forEach(account => this.updateAccounts(account));
-      window.location.reload(true);
     })
     .catch(err => console.log('ERROR'))
   }
@@ -76,7 +80,8 @@ export default class Balance extends React.Component {
           </tbody>
         </table>
         <div className="text-center mb-2">
-          <button onClick={this.getBalance} className="btn btn-success">Refresh Account Balance</button>
+          <button onClick={this.getAccounts}
+          className="btn btn-success">Refresh Account Balance</button>
         </div>
       </>
     )

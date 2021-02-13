@@ -13,7 +13,7 @@ export default class Categorize extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
-    this.importTransactions();
+    this.getTransactions();
   }
   getTransactions() {
     fetch('/api/transactions', {
@@ -31,7 +31,6 @@ export default class Categorize extends React.Component {
         }
       })
     })
-    .then(this.importTransactions())
     .catch(err => console.log('ERROR'))
   }
   updateTransactions(transactionData) {
@@ -50,8 +49,7 @@ export default class Categorize extends React.Component {
         amount: transactionData.amount
       })
     })
-    .then(response => response.json())
-    .then (transaction => transaction)
+    .then(this.importTransactions())
     .catch(err => console.log('ERROR'))
   }
   importTransactions() {
@@ -89,7 +87,8 @@ export default class Categorize extends React.Component {
     if(this.state.transactions.length === 0) {
       return (
         <div className="text-center mb-2">
-          <button onClick={this.getTransactions} className="btn btn-success">Refresh Transactions</button>
+          <button onClick={this.getTransactions}
+          className="btn btn-success">Refresh Transactions</button>
         </div>
       )
     } else {
@@ -102,7 +101,10 @@ export default class Categorize extends React.Component {
                 <div className="d-flex justify-content-between border rounded">
                   <div className="ml-3 mt-2 mb-2 col-7">
                     <p>{item.name}</p>
-                    <select className="form-control" id={item.transactionId} value={item.category === null ? 'default': item.category} onChange={this.handleChange}>
+                    <select className="form-control"
+                    id={item.transactionId}
+                    value={item.category === null ? 'default': item.category}
+                    onChange={this.handleChange}>
                       <option value="default" disabled>Category</option>
                       <option value="food">Food &amp; Drink</option>
                       <option value="travel">Travel</option>
@@ -123,8 +125,9 @@ export default class Categorize extends React.Component {
               </div>
             )}
           </div>
-          <div className="text-center mt-2 mb-2">
-            <button onClick={this.getTransactions} className="btn btn-success">Refresh Transactions</button>
+          <div className="text-center">
+            <button onClick={this.getTransactions}
+            className="btn btn-success mt-2 mb-2">Refresh Transactions</button>
           </div>
         </div>
       )

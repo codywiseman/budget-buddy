@@ -2,11 +2,14 @@ import React from 'react';
 import PlainLink, { PlaidLink } from 'react-plaid-link'
 import Accounts from '../pages/accounts';
 import AppContext from '../lib/app-context';
+import Redirect from './redirect';
 
 export default class Link extends React.Component {
   constructor(props) {
     super(props)
+    this.state = { token: null }
     this.saveAccessToken = this.saveAccessToken.bind(this)
+    this.createLinkToken = this.createLinkToken.bind(this)
   }
   saveAccessToken(token) {
     fetch('/api/budgetbuddy/save_token', {
@@ -22,31 +25,47 @@ export default class Link extends React.Component {
     .then(response => (response.json()))
     .catch(err => console.log('ERROR'))
   }
+  createLinkToken() {
+    fetch('/api/create_link_token', {
+      method: 'POST'
+    })
+      .then(response => (response.json()))
+      .then(token => this.setState({ token: token.link_token}))
+      .catch(err => console.log('ERROR'))
+  }
+
   render() {
-   return (
-      <div className="text-center mt-2">
-        <PlaidLink
-          token={this.context.linkToken}
-          onSuccess={(public_token) => {
-            fetch('/api/set_access_token', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ token: public_token })
-            })
-            .then(response => (response.json()))
-            .then(accessToken => {
-              window.localStorage.setItem('accessToken', accessToken.access_token);
-              this.saveAccessToken(accessToken.access_token);
-              window.location.reload(true);
-            })
-            .catch(err => console.log('ERROR'))
-          }}>
-          Connect a bank account
+    if(this.state.token === null) {
+      this.createLinkToken()
+      return (
+        <>
+        </>
+      )
+    } else {
+      return (
+        <div className="text-center mt-4">
+          <PlaidLink
+            token={this.state.token}
+            onSuccess={(public_token) => {
+              fetch('/api/set_access_token', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: public_token })
+              })
+                .then(response => (response.json()))
+                .then(accessToken => {
+                  this.saveAccessToken(accessToken.access_token);
+                  return <Redirect to="" />;
+                })
+                .catch(err => console.log('ERROR'))
+            }}>
+            Connect a bank account
         </PlaidLink>
-      </div>
-    )
+        </div>
+      )
+    }
   }
 }
 
