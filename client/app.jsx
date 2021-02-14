@@ -30,7 +30,7 @@ export default class App extends React.Component {
       })
     })
     const user = window.localStorage.getItem('email');
-    this.setState({ user,  isAuthorizing: false })
+    this.setState({ user })
     if(user) {
       fetch(`/api/budgetbuddy/user-info`, {
         method: 'POST',
@@ -43,9 +43,11 @@ export default class App extends React.Component {
         .then(result => {
           const userId = result[0].userId;
           const accessToken = result[0].accessToken;
-          this.setState({ userId, accessToken })
+          this.setState({ userId, accessToken, isAuthorizing: false})
         })
         .catch(err => console.log('ERROR'))
+    } else if (!user) {
+      this.setState({isAuthorizing: false})
     }
   }
   handleSignIn(result) {

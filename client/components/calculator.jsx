@@ -80,7 +80,6 @@ export default class Calculator extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('getIncome', data)
         if (data.length === 0) {
           return
         } else {
@@ -162,7 +161,6 @@ export default class Calculator extends React.Component {
       })
     })
       .then(response => {
-        console.log('editBudget', response)
         window.location.reload(true)
       })
       .catch(err => console.log('ERROR'))
@@ -177,7 +175,6 @@ export default class Calculator extends React.Component {
     })
       .then(response => response.json())
       .then(transactionData => {
-        console.log('transactionData', transactionData)
         const spent = {
           food: 0,
           travel: 0,
@@ -189,7 +186,7 @@ export default class Calculator extends React.Component {
           misc: 0
         }
         transactionData.map(item => {
-          if(item.category === 'notIncl' || 'default'){
+          if(item.category === 'notIncl' || item.category === 'default') {
             return
           } else if(this.state.month === item.month && this.state.year === item.year) {
             spent[item.category] = spent[item.category] + item.amount
@@ -202,15 +199,10 @@ export default class Calculator extends React.Component {
   remainingBudget() {
     let remains = 100;
     const expenses = {...this.state.expenses}
-    if(expenses.length === 0) {
-      return remains
-    } else {
-      for (let x in expenses) {
-        remains -= expenses[x]
-     }
-      console.log('remains', remains)
-      return remains
+    for (let x in expenses) {
+      remains -= expenses[x]
     }
+    return remains
   }
   totalSpent() {
     let spent = 0;
@@ -218,7 +210,6 @@ export default class Calculator extends React.Component {
     for (let x in spendings) {
       spent += spendings[x]
     }
-    console.log('spent', spent)
     return spent
   }
   render() {
