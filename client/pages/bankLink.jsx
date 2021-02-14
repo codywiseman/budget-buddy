@@ -7,12 +7,17 @@ const styles = {
   color: '#27A745'
 }
 
-
 export default class BankLink extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
+    if (!this.context.user) {
+      return <Redirect to="login" />
+    }
+    if (this.context.accessToken) {
+      return <Redirect to="" />
+    }
     return (
       <div>
         <div className="navbar navbar-dark bg-success">

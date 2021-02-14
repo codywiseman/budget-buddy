@@ -127,7 +127,7 @@ export default class Categorize extends React.Component {
           </div>
           <div className="text-center">
             <button onClick={this.getTransactions}
-            className="btn btn-success mt-2 mb-2">Refresh Transactions</button>
+            className="btn btn-success mt-4 mb-2">Refresh Transactions</button>
           </div>
         </div>
       )

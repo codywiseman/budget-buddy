@@ -16,7 +16,8 @@ export default class App extends React.Component {
       user: null,
       userId: null,
       route: parseRoute(window.location.hash),
-      accessToken: null
+      accessToken: null,
+      isAuthorizing: true
     };
     this.renderPage = this.renderPage.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
@@ -29,6 +30,7 @@ export default class App extends React.Component {
       })
     })
     const user = window.localStorage.getItem('email');
+    this.setState({ user,  isAuthorizing: false })
     if(user) {
       fetch(`/api/budgetbuddy/user-info`, {
         method: 'POST',
@@ -41,7 +43,7 @@ export default class App extends React.Component {
         .then(result => {
           const userId = result[0].userId;
           const accessToken = result[0].accessToken;
-          this.setState({ user, userId, accessToken })
+          this.setState({ userId, accessToken })
         })
         .catch(err => console.log('ERROR'))
     }
@@ -76,7 +78,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.state)
+    if (this.state.isAuthorizing) return null;
     const { user, route, accessToken, userId, } = this.state;
     const { handleSignIn } = this;
     const contextValue = { user, route, accessToken, userId, handleSignIn };

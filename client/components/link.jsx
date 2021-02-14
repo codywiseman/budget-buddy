@@ -21,8 +21,7 @@ export default class Link extends React.Component {
         accessToken: token,
         email: this.context.user
       })
-  })
-    .then(response => (response.json()))
+    })
     .catch(err => console.log('ERROR'))
   }
   createLinkToken() {
@@ -45,6 +44,11 @@ export default class Link extends React.Component {
       return (
         <div className="text-center mt-4">
           <PlaidLink
+            onEvent={(eventName) => {
+              if(eventName === 'HANDOFF') {
+                window.location.reload(true);
+              }
+            }}
             token={this.state.token}
             onSuccess={(public_token) => {
               fetch('/api/set_access_token', {
@@ -57,7 +61,6 @@ export default class Link extends React.Component {
                 .then(response => (response.json()))
                 .then(accessToken => {
                   this.saveAccessToken(accessToken.access_token);
-                  return <Redirect to="" />;
                 })
                 .catch(err => console.log('ERROR'))
             }}>
