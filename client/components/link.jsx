@@ -44,12 +44,12 @@ export default class Link extends React.Component {
       return (
         <div className="text-center">
           <PlaidLink
+            token={this.state.token}
             onEvent={(eventName) => {
               if(eventName === 'HANDOFF') {
                 window.location.reload(true);
               }
             }}
-            token={this.state.token}
             onSuccess={(public_token) => {
               fetch('/api/set_access_token', {
                 method: 'POST',

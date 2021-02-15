@@ -72,28 +72,6 @@ app.post('/api/budgetbuddy/user-info', (req, res, next) => {
     .catch(err => next(err))
 })
 
-//import access token to db
-
-app.post('/api/budgetbuddy/save_token', (req, res, next) => {
-  const { accessToken, email } = req.body;
-  if (!accessToken || !email) {
-    throw new ClientError(400, 'invalid access token');
-  }
-  const sql = `
-    update "users"
-    set "accessToken" = $1
-    where "email" = $2
-    returning *
-  `;
-  const params = [accessToken, email]
-  db.query(sql, params)
-    .then(response => {
-      const token = response.rows;
-      res.status(200).send(token)
-    })
-    .catch(err => next(err))
-})
-
 //retrieve access token from db
 
 app.post('/api/budgetbuddy/get_access_token', (req, res, next) => {
@@ -316,6 +294,29 @@ app.post('/api/set_access_token', function (request, response, next) {
     })
   })
 })
+
+//import access token to db
+
+app.post('/api/budgetbuddy/save_token', (req, res, next) => {
+  const { accessToken, email } = req.body;
+  if (!accessToken || !email) {
+    throw new ClientError(400, 'invalid access token');
+  }
+  const sql = `
+    update "users"
+    set "accessToken" = $1
+    where "email" = $2
+    returning *
+  `;
+  const params = [accessToken, email]
+  db.query(sql, params)
+    .then(response => {
+      const token = response.rows;
+      res.status(200).send(token)
+    })
+    .catch(err => next(err))
+})
+
 
 // Retrieve an Item's accounts
 
