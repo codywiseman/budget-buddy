@@ -40,11 +40,30 @@ app.post('/api/budgetbuddy/login', (req, res, next) => {
     throw new ClientError(400, 'invalid login');
   }
   const sql =  `
-    select "email", "userId"
+    select "email", "userId", "accessToken"
     from "users"
     where "email" = $1 and "password" = $2
   `;
   const params = [email, password]
+  db.query(sql, params)
+    .then(response => {
+      const users = response.rows;
+      res.status(200).send(users)
+    })
+    .catch(err => next(err))
+})
+
+app.post('/api/budgetbuddy/user-info', (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new ClientError(400, 'email required');
+  }
+  const sql = `
+    select "userId", "accessToken"
+    from "users"
+    where "email" = $1
+  `;
+  const params = [email]
   db.query(sql, params)
     .then(response => {
       const users = response.rows;

@@ -141,7 +141,7 @@ export default class Calculator extends React.Component {
         staticEx: this.state.staticEx,
       })
     })
-      .catch(err => console.log('ERROR'))
+    .catch(err => console.log('ERROR'))
     fetch('/api/budgetbuddy/budget_category', {
       method: 'POST',
       headers: {
@@ -160,7 +160,7 @@ export default class Calculator extends React.Component {
         misc: this.state.expenses.misc
       })
     })
-      .then(() => {
+      .then(response => {
         window.location.reload(true)
       })
       .catch(err => console.log('ERROR'))
@@ -186,7 +186,7 @@ export default class Calculator extends React.Component {
           misc: 0
         }
         transactionData.map(item => {
-          if(item.category === 'notIncl'){
+          if(item.category === 'notIncl' || item.category === 'default') {
             return
           } else if(this.state.month === item.month && this.state.year === item.year) {
             spent[item.category] = spent[item.category] + item.amount
@@ -199,7 +199,7 @@ export default class Calculator extends React.Component {
   remainingBudget() {
     let remains = 100;
     const expenses = {...this.state.expenses}
-    for (let x in expenses){
+    for (let x in expenses) {
       remains -= expenses[x]
     }
     return remains

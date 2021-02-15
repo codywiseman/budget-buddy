@@ -1,5 +1,7 @@
 import React from 'react';
-import AppContext from '../lib/app-context'
+import AppContext from '../lib/app-context';
+import Link from '../components/link';
+import BankLink from '../pages/bankLink';
 
 export default class Auth extends React.Component {
   constructor(props) {
@@ -10,9 +12,17 @@ export default class Auth extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.verifyLogin = this.verifyLogin.bind(this);
   }
   handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
+    this.verifyLogin();
+  }
+  handleChange() {
+    const { name, value } = event.target;
+    this.setState({[name]: value})
+  }
+  verifyLogin() {
     fetch(`/api/budgetbuddy/${this.props.action.path}`, {
       method: 'POST',
       headers: {
@@ -23,20 +33,10 @@ export default class Auth extends React.Component {
     .then(res => res.json())
     .then(result => {
       if (result[0].email) {
-       this.props.onSignIn(result[0])
+        this.props.onSignIn(result[0])
       }
     })
     .catch(err => console.log('ERROR'))
-    fetch('/api/create_link_token', {
-      method: 'POST'
-    })
-      .then(response => (response.json()))
-      .then(token => this.context.handleLinkToken(token.link_token))
-      .catch(err => console.log('ERROR'))
-    }
-  handleChange() {
-    const { name, value } = event.target;
-    this.setState({[name]: value})
   }
   render() {
     const message = this.props.action.path === 'login'
@@ -79,7 +79,8 @@ export default class Auth extends React.Component {
               btn-block mt-4">
               Submit</button>
             </form>
-            <small className="mt-3 text-center d-block">{account} <a href={link}>Click Here</a></small>
+            <small className="mt-3 text-center d-block">{account}
+            <a href={link}>Click Here</a></small>
           </div>
         </div>
       </div>
