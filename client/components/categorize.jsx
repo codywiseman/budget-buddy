@@ -84,54 +84,41 @@ export default class Categorize extends React.Component {
     .catch(err => console.log('ERROR'))
   }
   render() {
-    if(this.state.transactions.length === 0) {
-      return (
-        <div className="text-center mb-2">
-          <button onClick={this.getTransactions}
-          className="btn btn-success">Refresh Transactions</button>
-        </div>
-      )
-    } else {
-      const transactions = [...this.state.transactions]
-      return (
-        <div className="container">
-          <div className="row">
-            {transactions.map(item =>
-              <div key={item.transactionId} className="col-12 col-md-6 col-xs-12 mt-1">
-                <div className="d-flex justify-content-between border rounded">
-                  <div className="ml-3 mt-2 mb-2 col-7">
-                    <p>{item.name}</p>
-                    <select className="form-control"
-                    id={item.transactionId}
-                    value={item.category === null ? 'default': item.category}
-                    onChange={this.handleChange}>
-                      <option value="default" disabled>Category</option>
-                      <option value="food">Food &amp; Drink</option>
-                      <option value="travel">Travel</option>
-                      <option value="entertainment">Entertainment</option>
-                      <option value="personal">Personal</option>
-                      <option value="healthcare">Healthcare</option>
-                      <option value="education">Education</option>
-                      <option value="services">Services</option>
-                      <option value="misc">Misc.</option>
-                      <option value="notIncl">Not Included in Budget</option>
-                    </select>
-                  </div>
-                  <div className="mr-3 mt-2 mb-2 col-5">
-                    <p>{toDollar(item.amount)}</p>
-                    <p>{item.date}</p>
-                  </div>
+    const transactions = [...this.state.transactions]
+    return (
+      <div className="container mb-2">
+        <div className="row">
+          {transactions.map(item =>
+            <div key={item.transactionId} className="col-12 col-md-6 col-xs-12 mt-1">
+              <div className="d-flex justify-content-between border rounded">
+                <div className="ml-3 mt-2 mb-2 col-7">
+                  <p>{item.name}</p>
+                  <select className="form-control"
+                  id={item.transactionId}
+                  value={item.category === null ? 'default': item.category}
+                  onChange={this.handleChange}>
+                    <option value="default" disabled>Category</option>
+                    <option value="food">Food &amp; Drink</option>
+                    <option value="travel">Travel</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="personal">Personal</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="education">Education</option>
+                    <option value="services">Services</option>
+                    <option value="misc">Misc.</option>
+                    <option value="notIncl">Not Included in Budget</option>
+                  </select>
+                </div>
+                <div className="mr-3 mt-2 mb-2 col-5">
+                  <p>{toDollar(item.amount)}</p>
+                  <p>{item.date}</p>
                 </div>
               </div>
-            )}
-          </div>
-          <div className="text-center">
-            <button onClick={this.getTransactions}
-            className="btn btn-success mt-4 mb-2">Refresh Transactions</button>
-          </div>
+            </div>
+          )}
         </div>
-      )
-    }
+      </div>
+    )
   }
 }
 
