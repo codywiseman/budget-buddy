@@ -279,7 +279,7 @@ app.post('/api/create_link_token', function (request, response, next) {
   });
 });
 
-// Exchange token flow - exchange a Link public_token for
+// Exchange token flow - exchange a Link public_token for access token
 
 app.post('/api/set_access_token', function (request, response, next) {
   const PUBLIC_TOKEN = request.body.token;
