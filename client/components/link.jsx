@@ -7,7 +7,7 @@ import Redirect from './redirect';
 export default class Link extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { token: null }
+    this.state = {token: null}
     this.saveAccessToken = this.saveAccessToken.bind(this)
     this.createLinkToken = this.createLinkToken.bind(this)
   }
@@ -42,7 +42,7 @@ export default class Link extends React.Component {
       )
     } else {
       return (
-        <div className="text-center mt-4">
+        <div className="text-center">
           <PlaidLink
             onEvent={(eventName) => {
               if(eventName === 'HANDOFF') {

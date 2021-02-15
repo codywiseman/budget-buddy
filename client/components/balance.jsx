@@ -79,10 +79,6 @@ export default class Balance extends React.Component {
             ))}
           </tbody>
         </table>
-        <div className="text-center mb-2">
-          <button onClick={this.getAccounts}
-          className="btn btn-success">Refresh Account Balance</button>
-        </div>
       </>
     )
   }

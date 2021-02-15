@@ -309,11 +309,9 @@ app.post('/api/set_access_token', function (request, response, next) {
     if (error != null) {
       return response.json(error)
     }
-    ACCESS_TOKEN = tokenResponse.access_token;
-    ITEM_ID = tokenResponse.item_id;
     response.json({
-      access_token: ACCESS_TOKEN,
-      item_id: ITEM_ID,
+      access_token: tokenResponse.access_token,
+      item_id: tokenResponse.item_id,
       error: null,
     })
   })

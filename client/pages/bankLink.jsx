@@ -20,13 +20,13 @@ export default class BankLink extends React.Component {
     }
     return (
       <div>
-        <div className="navbar navbar-dark bg-success">
+        <div className="navbar navbar-dark bg-success mb-2">
           <a className="navbar-brand" href="#"><i className="fas fa-piggy-bank mr-2"></i>BudgetBuddy</a>
         </div>
         <div className="container mt-5 text-center">
-          <h6>Having access to your bank transactions in BudgetBuddy makes keeping track of your budget a breeze!</h6>
+          <h6 className="mt-4 mb-4">Having access to your bank transactions in BudgetBuddy makes keeping track of your budget a breeze!</h6>
           <i className="fas fa-piggy-bank fa-10x mt-4 mb-4" style={styles}></i>
-          <div>
+          <div className="mt-4">
             <Link />
           </div>
         </div>

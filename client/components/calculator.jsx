@@ -186,7 +186,7 @@ export default class Calculator extends React.Component {
           misc: 0
         }
         transactionData.map(item => {
-          if(item.category === 'notIncl' || item.category === 'default') {
+          if(item.category === 'notIncl' || item.category === null) {
             return
           } else if(this.state.month === item.month && this.state.year === item.year) {
             spent[item.category] = spent[item.category] + item.amount
