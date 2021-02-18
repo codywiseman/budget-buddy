@@ -4,9 +4,9 @@ import AppContext from './lib/app-context';
 import Home from './pages/home';
 import Accounts from './pages/accounts';
 import Transactions from './pages/transactions';
-import AuthPage from './pages/authPage';
+import AuthPage from './pages/auth-page';
 import getAccessToken from './lib/get-access';
-import BankLink from './pages/bankLink';
+import BankLink from './pages/bank-link';
 import Redirect from './components/redirect';
 
 export default class App extends React.Component {

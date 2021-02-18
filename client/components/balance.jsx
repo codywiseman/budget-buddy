@@ -1,6 +1,6 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
-import toDollar from '../lib/toDollar'
+import toDollar from '../lib/to-dollar'
 
 export default class Balance extends React.Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
-import toDollar from '../lib/toDollar'
-import { parseMonth, parseYear } from '../lib/parseDate'
+import toDollar from '../lib/to-dollar'
+import { parseMonth, parseYear } from '../lib/parse-date'
 
 export default class Categorize extends React.Component {
   constructor(props) {

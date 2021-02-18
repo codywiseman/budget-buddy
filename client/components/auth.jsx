@@ -1,14 +1,14 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
 import Link from '../components/link';
-import BankLink from '../pages/bankLink';
+import BankLink from '../pages/bank-link';
 
 export default class Auth extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
+      email: 'bb@gmail.com',
+      password: 'BudgetBuddy!'
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -60,7 +60,8 @@ export default class Auth extends React.Component {
                 type="email"
                 name ="email"
                 className="form-control"
-                placeholder="Enter email"
+                // placeholder="Enter email"
+                value="bb@gmail.com"
                 onChange={this.handleChange} />
               </div>
               <div className="form-group">
@@ -69,7 +70,8 @@ export default class Auth extends React.Component {
                 type="password"
                 name="password"
                 className="form-control"
-                placeholder="Password"
+                // placeholder="Password"
+                value="BudgetBuddy!"
                 onChange={this.handleChange} />
               </div>
               <button
