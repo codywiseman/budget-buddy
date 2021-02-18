@@ -86,7 +86,7 @@ export default class Categorize extends React.Component {
   render() {
     const transactions = [...this.state.transactions]
     return (
-      <div className="container mb-2">
+      <div className="container mb-2 mt-4">
         <div className="row">
           {transactions.map(item =>
             <div key={item.transactionId} className="col-12 col-md-6 col-xs-12 mt-1">

@@ -234,8 +234,8 @@ export default class Calculator extends React.Component {
             </div>
          </div>
         </div>
-        <div className="mt-2">
-          <table className="table table-striped text-center table-responsive-md">
+        <div className="mt-2 container">
+          <table className="table table-striped text-center table-responsive-sm">
             <thead>
               <tr>
                 <th scope="col">Category</th>

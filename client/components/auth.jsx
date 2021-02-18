@@ -60,6 +60,7 @@ export default class Auth extends React.Component {
                 className="form-control"
                 // placeholder="Enter email"
                 value="bb@gmail.com"
+                disabled
                 onChange={this.handleChange} />
               </div>
               <div className="form-group">
@@ -70,6 +71,7 @@ export default class Auth extends React.Component {
                 className="form-control"
                 // placeholder="Password"
                 value="BudgetBuddy!"
+                disabled
                 onChange={this.handleChange} />
               </div>
               <button

@@ -60,7 +60,7 @@ export default class Balance extends React.Component {
   render() {
     const accountsArray = [...this.state.accounts];
     return (
-      <>
+      <div className="container">
         <table className="table table-striped">
           <thead>
             <tr>
@@ -79,7 +79,7 @@ export default class Balance extends React.Component {
             ))}
           </tbody>
         </table>
-      </>
+      </div>
     )
   }
 }
