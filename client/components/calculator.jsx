@@ -71,7 +71,7 @@ export default class Calculator extends React.Component {
     }
   }
   getIncome() {
-    fetch('/api/budgetbuddy/income', {
+    fetch('/api/income', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ export default class Calculator extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   getExpenses() {
-    fetch('/api/budgetbuddy/expenses', {
+    fetch('/api/expenses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -128,7 +128,7 @@ export default class Calculator extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   editBudget() {
-    fetch('/api/budgetbuddy/create_budget', {
+    fetch('/api/create-budget', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -142,7 +142,7 @@ export default class Calculator extends React.Component {
       })
     })
     .catch(err => console.log('ERROR'))
-    fetch('/api/budgetbuddy/budget_category', {
+    fetch('/api/budget-category', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ export default class Calculator extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   addTotalSpent() {
-    fetch('api/budgetbuddy/export_transactions', {
+    fetch('api/export-transactions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

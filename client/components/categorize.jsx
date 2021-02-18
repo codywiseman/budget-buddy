@@ -34,7 +34,7 @@ export default class Categorize extends React.Component {
     .catch(err => console.log('ERROR'))
   }
   updateTransactions(transactionData) {
-    fetch('/api/budgetbuddy/save_transactions', {
+    fetch('/api/save-transactions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ export default class Categorize extends React.Component {
     .catch(err => console.log('ERROR'))
   }
   importTransactions() {
-    fetch('api/budgetbuddy/export_transactions', {
+    fetch('api/export-transactions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export default class Categorize extends React.Component {
   handleChange() {
     const transactionId = event.target.closest('select').id;
     const category = event.target.value;
-    fetch('/api/budgetbuddy/category', {
+    fetch('/api/category', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

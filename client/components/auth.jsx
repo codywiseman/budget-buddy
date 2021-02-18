@@ -1,7 +1,5 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
-import Link from '../components/link';
-import BankLink from '../pages/bank-link';
 
 export default class Auth extends React.Component {
   constructor(props) {
@@ -23,7 +21,7 @@ export default class Auth extends React.Component {
     this.setState({[name]: value})
   }
   verifyLogin() {
-    fetch(`/api/budgetbuddy/${this.props.action.path}`, {
+    fetch(`/api/${this.props.action.path}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

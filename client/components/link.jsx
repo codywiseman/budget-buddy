@@ -1,8 +1,6 @@
 import React from 'react';
-import PlainLink, { PlaidLink } from 'react-plaid-link'
-import Accounts from '../pages/accounts';
+import { PlaidLink } from 'react-plaid-link'
 import AppContext from '../lib/app-context';
-import Redirect from './redirect';
 
 export default class Link extends React.Component {
   constructor(props) {
@@ -12,7 +10,7 @@ export default class Link extends React.Component {
     this.createLinkToken = this.createLinkToken.bind(this)
   }
   saveAccessToken(token) {
-    fetch('/api/budgetbuddy/save_token', {
+    fetch('/api/save-token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -25,7 +23,7 @@ export default class Link extends React.Component {
     .catch(err => console.log('ERROR'))
   }
   createLinkToken() {
-    fetch('/api/create_link_token', {
+    fetch('/api/create-link-token', {
       method: 'POST'
     })
       .then(response => (response.json()))
@@ -51,7 +49,7 @@ export default class Link extends React.Component {
               }
             }}
             onSuccess={(public_token) => {
-              fetch('/api/set_access_token', {
+              fetch('/api/set-access-token', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'

@@ -14,7 +14,7 @@ export default class Balance extends React.Component {
     this.getAccounts()
   }
   renderAccounts() {
-    fetch('/api/budgetbuddy/accounts', {
+    fetch('/api/import-accounts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ export default class Balance extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   updateAccounts(account) {
-     fetch('/api/budgetbuddy/update_account_balance', {
+     fetch('/api/update-account-balance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
