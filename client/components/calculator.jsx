@@ -56,8 +56,12 @@ export default class Calculator extends React.Component {
     if(event.target.type === 'range') {
       const targetId = event.target.id;
       const copyExpenses = { ...this.state.expenses };
-      copyExpenses[targetId] = event.target.value;
-      this.setState({ expenses: copyExpenses })
+      if (this.remainingBudget() < 1 && copyExpenses[targetId] < event.target.value) {
+        return;
+      } else {
+        copyExpenses[targetId] = event.target.value;
+        this.setState({ expenses: copyExpenses })
+      }
     }
     if(event.target.type === 'month') {
       const month = parseMonth(event.target.value)
@@ -213,6 +217,7 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
+    console.log(this.state.expenses)
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
