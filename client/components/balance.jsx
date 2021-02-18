@@ -1,6 +1,6 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
-import toDollar from '../lib/toDollar'
+import toDollar from '../lib/to-dollar'
 
 export default class Balance extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class Balance extends React.Component {
     this.getAccounts()
   }
   renderAccounts() {
-    fetch('/api/budgetbuddy/accounts', {
+    fetch('/api/import-accounts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ export default class Balance extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   updateAccounts(account) {
-     fetch('/api/budgetbuddy/update_account_balance', {
+     fetch('/api/update-account-balance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ export default class Balance extends React.Component {
   render() {
     const accountsArray = [...this.state.accounts];
     return (
-      <>
+      <div className="container">
         <table className="table table-striped">
           <thead>
             <tr>
@@ -79,7 +79,7 @@ export default class Balance extends React.Component {
             ))}
           </tbody>
         </table>
-      </>
+      </div>
     )
   }
 }

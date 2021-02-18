@@ -4,10 +4,8 @@ const staticMiddleware = require('./static-middleware');
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const plaid = require('plaid');
-const util = require('util');
 const moment = require('moment');
 const pg = require('pg');
-const { response } = require('express');
 
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
 const PLAID_SECRET = process.env.PLAID_SECRET;
@@ -34,7 +32,7 @@ const db = new pg.Pool({
 });
 
 
-app.post('/api/budgetbuddy/login', (req, res, next) => {
+app.post('/api/login', (req, res, next) => {
   const {email , password} = req.body;
   if (!email || !password) {
     throw new ClientError(400, 'invalid login');
@@ -53,7 +51,7 @@ app.post('/api/budgetbuddy/login', (req, res, next) => {
     .catch(err => next(err))
 })
 
-app.post('/api/budgetbuddy/user-info', (req, res, next) => {
+app.post('/api/user-info', (req, res, next) => {
   const { email } = req.body;
   if (!email) {
     throw new ClientError(400, 'email required');
@@ -74,7 +72,7 @@ app.post('/api/budgetbuddy/user-info', (req, res, next) => {
 
 //retrieve access token from db
 
-app.post('/api/budgetbuddy/get_access_token', (req, res, next) => {
+app.post('/api/get-access-token', (req, res, next) => {
   const { email } = req.body;
   if (!email) {
     throw new ClientError(400, 'email required');
@@ -95,7 +93,7 @@ app.post('/api/budgetbuddy/get_access_token', (req, res, next) => {
 
 //retrieve account balances of current user
 
-app.post('/api/budgetbuddy/account_balance', (req, res, next) => {
+app.post('/api/account-balance', (req, res, next) => {
   const { email } = req.body;
   if (!email) {
     throw new ClientError(400, 'email required');
@@ -117,7 +115,7 @@ app.post('/api/budgetbuddy/account_balance', (req, res, next) => {
 
 //when user refreshed account balances, new values are stored in db
 
-app.post('/api/budgetbuddy/update_account_balance', (req, res, next) => {
+app.post('/api/update-account-balance', (req, res, next) => {
   const { plaidId, userId, name, subtype, balances } = req.body;
   if (!plaidId || !userId || !name || !subtype || !balances) {
     throw new ClientError(400, 'missing fields');
@@ -139,7 +137,7 @@ app.post('/api/budgetbuddy/update_account_balance', (req, res, next) => {
 
 //retrieve current account info from database to render to accounts page
 
-app.post('/api/budgetbuddy/accounts', (req, res, next) => {
+app.post('/api/import-accounts', (req, res, next) => {
   const { userId } = req.body;
   if (!userId ) {
     throw new ClientError(400, 'userId required');
@@ -163,7 +161,7 @@ app.post('/api/budgetbuddy/accounts', (req, res, next) => {
 
 //import budget info to db
 
-app.post('/api/budgetbuddy/create_budget', (req, res, next) => {
+app.post('/api/create-budget', (req, res, next) => {
   const { budgetId, userId, income, savings, staticEx } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
@@ -185,7 +183,7 @@ app.post('/api/budgetbuddy/create_budget', (req, res, next) => {
 
 
 
-app.post('/api/budgetbuddy/budget_category', (req, res, next) => {
+app.post('/api/budget-category', (req, res, next) => {
   const { itemId, userId, food, travel, entertainment, healthcare, personal, education, services, misc } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
@@ -207,7 +205,7 @@ app.post('/api/budgetbuddy/budget_category', (req, res, next) => {
 
 //retrieve budget info from db
 
-app.post('/api/budgetbuddy/income', (req, res, next) => {
+app.post('/api/income', (req, res, next) => {
   const { userId } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
@@ -231,7 +229,7 @@ app.post('/api/budgetbuddy/income', (req, res, next) => {
     .catch(err => next(err))
 })
 
-app.post('/api/budgetbuddy/expenses', (req, res, next) => {
+app.post('/api/expenses', (req, res, next) => {
   const { userId } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
@@ -258,7 +256,7 @@ app.post('/api/budgetbuddy/expenses', (req, res, next) => {
 
 // Create a link token with configs which we can then use to initialize Plaid Link client-side.
 
-app.post('/api/create_link_token', function (request, response, next) {
+app.post('/api/create-link-token', function (request, response, next) {
   const configs = {
     user: {
       // This should correspond to a unique id for the current user.
@@ -281,7 +279,7 @@ app.post('/api/create_link_token', function (request, response, next) {
 
 // Exchange token flow - exchange a Link public_token for access token
 
-app.post('/api/set_access_token', function (request, response, next) {
+app.post('/api/set-access-token', function (request, response, next) {
   const PUBLIC_TOKEN = request.body.token;
   client.exchangePublicToken(PUBLIC_TOKEN, function (error, tokenResponse) {
     if (error != null) {
@@ -297,7 +295,7 @@ app.post('/api/set_access_token', function (request, response, next) {
 
 //import access token to db
 
-app.post('/api/budgetbuddy/save_token', (req, res, next) => {
+app.post('/api/save-token', (req, res, next) => {
   const { accessToken, email } = req.body;
   if (!accessToken || !email) {
     throw new ClientError(400, 'invalid access token');
@@ -358,7 +356,7 @@ app.post('/api/transactions', function (req, res, next) {
 
 // upload transactions to db
 
-app.post('/api/budgetbuddy/save_transactions', (req, res, next) => {
+app.post('/api/save-transactions', (req, res, next) => {
   const { userId, transactionId, name, month, year, date, amount } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
@@ -380,7 +378,7 @@ app.post('/api/budgetbuddy/save_transactions', (req, res, next) => {
 
 //export transaction data from db
 
-app.post('/api/budgetbuddy/export_transactions', (req, res, next) => {
+app.post('/api/export-transactions', (req, res, next) => {
   const { userId } = req.body;
   if (!userId) {
     throw new ClientError(400, 'userId required');
@@ -405,7 +403,7 @@ app.post('/api/budgetbuddy/export_transactions', (req, res, next) => {
 
 // update category
 
-app.put('/api/budgetbuddy/category', (req, res, next) => {
+app.put('/api/category', (req, res, next) => {
   const {transactionId, category} = req.body
   if (!category) {
     throw new ClientError(400, ' required');

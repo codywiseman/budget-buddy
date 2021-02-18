@@ -4,10 +4,8 @@ import AppContext from './lib/app-context';
 import Home from './pages/home';
 import Accounts from './pages/accounts';
 import Transactions from './pages/transactions';
-import AuthPage from './pages/authPage';
-import getAccessToken from './lib/get-access';
-import BankLink from './pages/bankLink';
-import Redirect from './components/redirect';
+import AuthPage from './pages/auth-page';
+import BankLink from './pages/bank-link';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -32,7 +30,7 @@ export default class App extends React.Component {
     const user = window.localStorage.getItem('email');
     this.setState({ user })
     if(user) {
-      fetch(`/api/budgetbuddy/user-info`, {
+      fetch(`/api/user-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

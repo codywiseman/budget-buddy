@@ -1,7 +1,7 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
-import toDollar from '../lib/toDollar';
-import { parseMonth, parseYear, currentDate } from '../lib/parseDate'
+import toDollar from '../lib/to-dollar';
+import { parseMonth, parseYear, currentDate } from '../lib/parse-date'
 
 export default class Calculator extends React.Component {
   constructor(props) {
@@ -56,8 +56,12 @@ export default class Calculator extends React.Component {
     if(event.target.type === 'range') {
       const targetId = event.target.id;
       const copyExpenses = { ...this.state.expenses };
-      copyExpenses[targetId] = event.target.value;
-      this.setState({ expenses: copyExpenses })
+      if (this.remainingBudget() < 1 && copyExpenses[targetId] < event.target.value) {
+        return;
+      } else {
+        copyExpenses[targetId] = event.target.value;
+        this.setState({ expenses: copyExpenses })
+      }
     }
     if(event.target.type === 'month') {
       const month = parseMonth(event.target.value)
@@ -71,7 +75,7 @@ export default class Calculator extends React.Component {
     }
   }
   getIncome() {
-    fetch('/api/budgetbuddy/income', {
+    fetch('/api/income', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -90,7 +94,7 @@ export default class Calculator extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   getExpenses() {
-    fetch('/api/budgetbuddy/expenses', {
+    fetch('/api/expenses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -128,7 +132,7 @@ export default class Calculator extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   editBudget() {
-    fetch('/api/budgetbuddy/create_budget', {
+    fetch('/api/create-budget', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -142,7 +146,7 @@ export default class Calculator extends React.Component {
       })
     })
     .catch(err => console.log('ERROR'))
-    fetch('/api/budgetbuddy/budget_category', {
+    fetch('/api/budget-category', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -166,7 +170,7 @@ export default class Calculator extends React.Component {
       .catch(err => console.log('ERROR'))
   }
   addTotalSpent() {
-    fetch('api/budgetbuddy/export_transactions', {
+    fetch('api/export-transactions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -213,6 +217,7 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
+    console.log(this.state.expenses)
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
@@ -234,8 +239,8 @@ export default class Calculator extends React.Component {
             </div>
          </div>
         </div>
-        <div className="mt-2">
-          <table className="table table-striped text-center table-responsive-md">
+        <div className="mt-2 container">
+          <table className="table table-striped text-center table-responsive-sm">
             <thead>
               <tr>
                 <th scope="col">Category</th>
