@@ -1,7 +1,16 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
 import toDollar from '../lib/to-dollar';
-import { parseMonth, parseYear, currentDate } from '../lib/parse-date'
+import { parseMonth, parseYear, currentDate } from '../lib/parse-date';
+
+const styles = {
+  table: {
+    width: '25%'
+  },
+  budgetOver: {
+    color: 'red'
+  }
+}
 
 export default class Calculator extends React.Component {
   constructor(props) {
@@ -217,7 +226,6 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
-    console.log(this.state.expenses)
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
@@ -240,63 +248,63 @@ export default class Calculator extends React.Component {
          </div>
         </div>
         <div className="mt-2 container">
-          <table className="table table-striped text-center table-responsive-sm">
+          <table className="table table-striped table-responsive-sm">
             <thead>
               <tr>
-                <th scope="col">Category</th>
-                <th scope="col">Budgeted</th>
-                <th scope="col">Spent</th>
-                <th scope="col">Remaining</th>
+                <th className="text-center" scope="col" style={styles.table}>Category</th>
+                <th className="text-center" scope="col" style={styles.table}>Budgeted</th>
+                <th className="text-center" scope="col" style={styles.table}>Spent</th>
+                <th className="text-center" scope="col" style={styles.table}>Remaining</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Food &amp; Drink</td>
-                <td>{toDollar(budget * (this.state.expenses.food / 100))}</td>
-                <td>{toDollar(this.state.spent.food)}</td>
-                <td>{toDollar(budget * (this.state.expenses.food / 100) - this.state.spent.food)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.food / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.food)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.food / 100) - this.state.spent.food)}</td>
               </tr>
               <tr>
                 <td>Travel</td>
-                <td>{toDollar(budget * (this.state.expenses.travel / 100))}</td>
-                <td>{toDollar(this.state.spent.travel)}</td>
-                <td>{toDollar(budget * (this.state.expenses.travel / 100) - this.state.spent.travel)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.travel / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.travel)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.travel / 100) - this.state.spent.travel)}</td>
               </tr>
               <tr>
                 <td>Entertainment</td>
-                <td>{toDollar(budget * (this.state.expenses.entertainment / 100))}</td>
-                <td>{toDollar(this.state.spent.entertainment)}</td>
-                <td>{toDollar(budget * (this.state.expenses.entertainment / 100) - this.state.spent.entertainment)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.entertainment / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.entertainment)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.entertainment / 100) - this.state.spent.entertainment)}</td>
               </tr>
               <tr>
                 <td>Healthcare</td>
-                <td>{toDollar(budget * (this.state.expenses.healthcare / 100))}</td>
-                <td>{toDollar(this.state.spent.healthcare)}</td>
-                <td>{toDollar(budget * (this.state.expenses.healthcare / 100) - this.state.spent.healthcare)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.healthcare / 100))}</td>
+                <td className="text-right"> {toDollar(this.state.spent.healthcare)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.healthcare / 100) - this.state.spent.healthcare)}</td>
               </tr>
               <tr>
                 <td>Personal</td>
-                <td>{toDollar(budget * (this.state.expenses.personal / 100))}</td>
-                <td>{toDollar(this.state.spent.personal)}</td>
-                <td>{toDollar(budget * (this.state.expenses.personal / 100) - this.state.spent.personal)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.personal / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.personal)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.personal / 100) - this.state.spent.personal)}</td>
               </tr>
               <tr>
                 <td>Education</td>
-                <td>{toDollar(budget * (this.state.expenses.education / 100))}</td>
-                <td>{toDollar(this.state.spent.education)}</td>
-                <td>{toDollar(budget * (this.state.expenses.education / 100) - this.state.spent.education)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.education / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.education)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.education / 100) - this.state.spent.education)}</td>
               </tr>
               <tr>
                 <td>Services</td>
-                <td>{toDollar(budget * (this.state.expenses.services / 100))}</td>
-                <td>{toDollar(this.state.spent.services)}</td>
-                <td>{toDollar(budget * (this.state.expenses.services / 100) - this.state.spent.services)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.services / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.services)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.services / 100) - this.state.spent.services)}</td>
               </tr>
               <tr>
                 <td>Misc</td>
-                <td>{toDollar(budget * (this.state.expenses.misc / 100))}</td>
-                <td>{toDollar(this.state.spent.misc)}</td>
-                <td>{toDollar(budget * (this.state.expenses.misc / 100) - this.state.spent.misc)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.misc / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.misc)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.misc / 100) - this.state.spent.misc)}</td>
               </tr>
             </tbody>
           </table>
@@ -335,7 +343,7 @@ export default class Calculator extends React.Component {
                   </div>
                   <div className="text-center">
                     <h5>Allocate your spendings</h5>
-                    <h6>Remaining: {`${remainingBudget}%`}</h6>
+                    <h6 style={remainingBudget < 0 ? styles.budgetOver : null }>Remaining: {`${remainingBudget}%`}</h6>
                   </div>
                   <div className="form-group">
                     <label htmlFor="food">Food &amp; Drink</label>
