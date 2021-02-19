@@ -346,56 +346,56 @@ export default class Calculator extends React.Component {
                     <h6 style={remainingBudget < 0 ? styles.budgetOver : null }>Remaining: {`${remainingBudget}%`}</h6>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="food">Food &amp; Drink</label>
+                    <label htmlFor="food">Food &amp; Drink (${budget * (this.state.expenses.food/100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="food" className="form-control" min="0" max="100"  value={this.state.expenses.food}/>
                       <p className="ml-2 mb-0">{`${this.state.expenses.food}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="entertainment">Entertainment</label>
+                    <label htmlFor="entertainment">Entertainment (${budget * (this.state.expenses.entertainment / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="entertainment" className="form-control" min="0" max="100" value={this.state.expenses.entertainment}/>
                       <p className="ml-2 mb-0">{`${this.state.expenses.entertainment}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="travel">Travel</label>
+                    <label htmlFor="travel">Travel (${budget * (this.state.expenses.travel / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="travel" className="form-control" min="0" max="100" value={this.state.expenses.travel}/>
                       <p className="ml-2 mb-0">{`${this.state.expenses.travel}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="healthcare">Healthcare</label>
+                    <label htmlFor="healthcare">Healthcare (${budget * (this.state.expenses.healthcare / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="healthcare" className="form-control" min="0" max="100" value={this.state.expenses.healthcare} />
                       <p className="ml-2 mb-0">{`${this.state.expenses.healthcare}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="personal">Personal</label>
+                    <label htmlFor="personal">Personal (${budget * (this.state.expenses.personal / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="personal" className="form-control" min="0" max="100" value={this.state.expenses.personal} />
                       <p className="ml-2 mb-0">{`${this.state.expenses.personal}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="education">Education</label>
+                    <label htmlFor="education">Education (${budget * (this.state.expenses.education / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="education" className="form-control" min="0" max="100" value={this.state.expenses.education} />
                       <p className="ml-2 mb-0">{`${this.state.expenses.education}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="services">Services</label>
+                    <label htmlFor="services">Services (${budget * (this.state.expenses.services / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="services" className="form-control" min="0" max="100" value={this.state.expenses.services} />
                       <p className="ml-2 mb-0">{`${this.state.expenses.services}%`}</p>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="misc">Misc.</label>
+                    <label htmlFor="misc">Misc. (${budget * (this.state.expenses.misc / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="misc" className="form-control" min="0" max="100" value={this.state.expenses.misc} />
                       <p className="ml-2 mb-0">{`${this.state.expenses.misc}%`}</p>
