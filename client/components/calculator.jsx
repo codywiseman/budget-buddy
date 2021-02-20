@@ -83,10 +83,11 @@ export default class Calculator extends React.Component {
       this.setState({[targetId]: event.target.value})
     }
     if (event.target.type === 'number' && event.target.className === 'sliders ml-2 mb-0') {
+      console.log(event.target.value);
       const targetName = event.target.name;
       const copyExpenses = { ...this.state.expenses };
-      copyExpenses[targetName] = this.state.expenses[targetName] + 1;
-      this.setState({expenses: copyExpenses});
+      copyExpenses[targetName] = event.target.value;
+      this.setState({expenses: copyExpenses})
     }
   }
   getIncome() {
@@ -232,6 +233,7 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
+    const copyExpenses = {...this.state.expenses}
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
@@ -355,56 +357,56 @@ export default class Calculator extends React.Component {
                     <label htmlFor="food">Food &amp; Drink (${budget * (this.state.expenses.food/100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="food" className="form-control" min="0" max="100"  value={this.state.expenses.food}/>
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="food" step='1' value={this.state.expenses.food} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="food" value={copyExpenses.food} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="entertainment">Entertainment (${budget * (this.state.expenses.entertainment / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="entertainment" className="form-control" min="0" max="100" value={this.state.expenses.entertainment}/>
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="entertainment" step='1' value={this.state.expenses.entertainment} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="entertainment" value={copyExpenses.entertainment} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="travel">Travel (${budget * (this.state.expenses.travel / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="travel" className="form-control" min="0" max="100" value={this.state.expenses.travel}/>
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="travel" step='1' value={this.state.expenses.travel} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="travel" value={copyExpenses.travel} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="healthcare">Healthcare (${budget * (this.state.expenses.healthcare / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="healthcare" className="form-control" min="0" max="100" value={this.state.expenses.healthcare} />
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="healthcare" step='1' value={this.state.expenses.healthcare} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="healthcare" value={copyExpenses.healthcare} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="personal">Personal (${budget * (this.state.expenses.personal / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="personal" className="form-control" min="0" max="100" value={this.state.expenses.personal} />
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="personal" step='1' value={this.state.expenses.personal} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="personal" value={copyExpenses.personal} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="education">Education (${budget * (this.state.expenses.education / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="education" className="form-control" min="0" max="100" value={this.state.expenses.education} />
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="education" step='1' value={this.state.expenses.education} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="education" value={copyExpenses.education} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="services">Services (${budget * (this.state.expenses.services / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="services" className="form-control" min="0" max="100" value={this.state.expenses.services} />
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="services" step='1' value={this.state.expenses.services} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="services" value={copyExpenses.services} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="misc">Misc. (${budget * (this.state.expenses.misc / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="misc" className="form-control" min="0" max="100" value={this.state.expenses.misc} />
-                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="misc" step='1' value={this.state.expenses.misc} onChange={this.handleChange} /><span>%</span>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="misc" value={copyExpenses.misc} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="modal-footer">
