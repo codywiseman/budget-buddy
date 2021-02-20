@@ -1,7 +1,16 @@
 import React from 'react';
 import AppContext from '../lib/app-context'
 import toDollar from '../lib/to-dollar';
-import { parseMonth, parseYear, currentDate } from '../lib/parse-date'
+import { parseMonth, parseYear, currentDate } from '../lib/parse-date';
+
+const styles = {
+  table: {
+    width: '25%'
+  },
+  budgetOver: {
+    color: 'red'
+  }
+}
 
 export default class Calculator extends React.Component {
   constructor(props) {
@@ -69,9 +78,15 @@ export default class Calculator extends React.Component {
       this.setState({month, year})
       this.addTotalSpent();
     }
-    if (event.target.type === 'number') {
+    if (event.target.type === 'number' && event.target.className === 'form-control') {
       const targetId = event.target.id;
       this.setState({[targetId]: event.target.value})
+    }
+    if (event.target.type === 'number' && event.target.className === 'sliders ml-2 mb-0') {
+      const targetName = event.target.name;
+      const copyExpenses = { ...this.state.expenses };
+      copyExpenses[targetName] = this.state.expenses[targetName] + 1;
+      this.setState({expenses: copyExpenses});
     }
   }
   getIncome() {
@@ -217,7 +232,6 @@ export default class Calculator extends React.Component {
     return spent
   }
   render() {
-    console.log(this.state.expenses)
     const remainingBudget = this.remainingBudget();
     const totalSpent = this.totalSpent();
     const budget = this.state.income - this.state.staticEx - this.state.savings;
@@ -240,63 +254,63 @@ export default class Calculator extends React.Component {
          </div>
         </div>
         <div className="mt-2 container">
-          <table className="table table-striped text-center table-responsive-sm">
+          <table className="table table-striped table-responsive-sm">
             <thead>
               <tr>
-                <th scope="col">Category</th>
-                <th scope="col">Budgeted</th>
-                <th scope="col">Spent</th>
-                <th scope="col">Remaining</th>
+                <th className="text-center" scope="col" style={styles.table}>Category</th>
+                <th className="text-center" scope="col" style={styles.table}>Budgeted</th>
+                <th className="text-center" scope="col" style={styles.table}>Spent</th>
+                <th className="text-center" scope="col" style={styles.table}>Remaining</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Food &amp; Drink</td>
-                <td>{toDollar(budget * (this.state.expenses.food / 100))}</td>
-                <td>{toDollar(this.state.spent.food)}</td>
-                <td>{toDollar(budget * (this.state.expenses.food / 100) - this.state.spent.food)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.food / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.food)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.food / 100) - this.state.spent.food)}</td>
               </tr>
               <tr>
                 <td>Travel</td>
-                <td>{toDollar(budget * (this.state.expenses.travel / 100))}</td>
-                <td>{toDollar(this.state.spent.travel)}</td>
-                <td>{toDollar(budget * (this.state.expenses.travel / 100) - this.state.spent.travel)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.travel / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.travel)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.travel / 100) - this.state.spent.travel)}</td>
               </tr>
               <tr>
                 <td>Entertainment</td>
-                <td>{toDollar(budget * (this.state.expenses.entertainment / 100))}</td>
-                <td>{toDollar(this.state.spent.entertainment)}</td>
-                <td>{toDollar(budget * (this.state.expenses.entertainment / 100) - this.state.spent.entertainment)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.entertainment / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.entertainment)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.entertainment / 100) - this.state.spent.entertainment)}</td>
               </tr>
               <tr>
                 <td>Healthcare</td>
-                <td>{toDollar(budget * (this.state.expenses.healthcare / 100))}</td>
-                <td>{toDollar(this.state.spent.healthcare)}</td>
-                <td>{toDollar(budget * (this.state.expenses.healthcare / 100) - this.state.spent.healthcare)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.healthcare / 100))}</td>
+                <td className="text-right"> {toDollar(this.state.spent.healthcare)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.healthcare / 100) - this.state.spent.healthcare)}</td>
               </tr>
               <tr>
                 <td>Personal</td>
-                <td>{toDollar(budget * (this.state.expenses.personal / 100))}</td>
-                <td>{toDollar(this.state.spent.personal)}</td>
-                <td>{toDollar(budget * (this.state.expenses.personal / 100) - this.state.spent.personal)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.personal / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.personal)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.personal / 100) - this.state.spent.personal)}</td>
               </tr>
               <tr>
                 <td>Education</td>
-                <td>{toDollar(budget * (this.state.expenses.education / 100))}</td>
-                <td>{toDollar(this.state.spent.education)}</td>
-                <td>{toDollar(budget * (this.state.expenses.education / 100) - this.state.spent.education)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.education / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.education)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.education / 100) - this.state.spent.education)}</td>
               </tr>
               <tr>
                 <td>Services</td>
-                <td>{toDollar(budget * (this.state.expenses.services / 100))}</td>
-                <td>{toDollar(this.state.spent.services)}</td>
-                <td>{toDollar(budget * (this.state.expenses.services / 100) - this.state.spent.services)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.services / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.services)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.services / 100) - this.state.spent.services)}</td>
               </tr>
               <tr>
                 <td>Misc</td>
-                <td>{toDollar(budget * (this.state.expenses.misc / 100))}</td>
-                <td>{toDollar(this.state.spent.misc)}</td>
-                <td>{toDollar(budget * (this.state.expenses.misc / 100) - this.state.spent.misc)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.misc / 100))}</td>
+                <td className="text-right">{toDollar(this.state.spent.misc)}</td>
+                <td className="text-right">{toDollar(budget * (this.state.expenses.misc / 100) - this.state.spent.misc)}</td>
               </tr>
             </tbody>
           </table>
@@ -335,62 +349,62 @@ export default class Calculator extends React.Component {
                   </div>
                   <div className="text-center">
                     <h5>Allocate your spendings</h5>
-                    <h6>Remaining: {`${remainingBudget}%`}</h6>
+                    <h6 style={remainingBudget < 0 ? styles.budgetOver : null }>Remaining: {`${remainingBudget}%`}</h6>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="food">Food &amp; Drink</label>
+                    <label htmlFor="food">Food &amp; Drink (${budget * (this.state.expenses.food/100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="food" className="form-control" min="0" max="100"  value={this.state.expenses.food}/>
-                      <p className="ml-2 mb-0">{`${this.state.expenses.food}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="food" step='1' value={this.state.expenses.food} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="entertainment">Entertainment</label>
+                    <label htmlFor="entertainment">Entertainment (${budget * (this.state.expenses.entertainment / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="entertainment" className="form-control" min="0" max="100" value={this.state.expenses.entertainment}/>
-                      <p className="ml-2 mb-0">{`${this.state.expenses.entertainment}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="entertainment" step='1' value={this.state.expenses.entertainment} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="travel">Travel</label>
+                    <label htmlFor="travel">Travel (${budget * (this.state.expenses.travel / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="travel" className="form-control" min="0" max="100" value={this.state.expenses.travel}/>
-                      <p className="ml-2 mb-0">{`${this.state.expenses.travel}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="travel" step='1' value={this.state.expenses.travel} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="healthcare">Healthcare</label>
+                    <label htmlFor="healthcare">Healthcare (${budget * (this.state.expenses.healthcare / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="healthcare" className="form-control" min="0" max="100" value={this.state.expenses.healthcare} />
-                      <p className="ml-2 mb-0">{`${this.state.expenses.healthcare}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="healthcare" step='1' value={this.state.expenses.healthcare} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="personal">Personal</label>
+                    <label htmlFor="personal">Personal (${budget * (this.state.expenses.personal / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="personal" className="form-control" min="0" max="100" value={this.state.expenses.personal} />
-                      <p className="ml-2 mb-0">{`${this.state.expenses.personal}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="personal" step='1' value={this.state.expenses.personal} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="education">Education</label>
+                    <label htmlFor="education">Education (${budget * (this.state.expenses.education / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="education" className="form-control" min="0" max="100" value={this.state.expenses.education} />
-                      <p className="ml-2 mb-0">{`${this.state.expenses.education}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="education" step='1' value={this.state.expenses.education} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="services">Services</label>
+                    <label htmlFor="services">Services (${budget * (this.state.expenses.services / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="services" className="form-control" min="0" max="100" value={this.state.expenses.services} />
-                      <p className="ml-2 mb-0">{`${this.state.expenses.services}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="services" step='1' value={this.state.expenses.services} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="misc">Misc.</label>
+                    <label htmlFor="misc">Misc. (${budget * (this.state.expenses.misc / 100)})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="misc" className="form-control" min="0" max="100" value={this.state.expenses.misc} />
-                      <p className="ml-2 mb-0">{`${this.state.expenses.misc}%`}</p>
+                      <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="misc" step='1' value={this.state.expenses.misc} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="modal-footer">
