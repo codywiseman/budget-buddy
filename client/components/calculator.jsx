@@ -354,56 +354,56 @@ export default class Calculator extends React.Component {
                     <h6 style={remainingBudget < 0 ? styles.budgetOver : null }>Remaining: {`${remainingBudget}%`}</h6>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="food">Food &amp; Drink (${budget * (this.state.expenses.food/100)})</label>
+                    <label htmlFor="food">Food &amp; Drink ({toDollar(budget * (this.state.expenses.food/100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="food" className="form-control" min="0" max="100"  value={this.state.expenses.food}/>
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="food" value={copyExpenses.food} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="entertainment">Entertainment (${budget * (this.state.expenses.entertainment / 100)})</label>
+                    <label htmlFor="entertainment">Entertainment ({toDollar(budget * (this.state.expenses.entertainment / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="entertainment" className="form-control" min="0" max="100" value={this.state.expenses.entertainment}/>
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="entertainment" value={copyExpenses.entertainment} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="travel">Travel (${budget * (this.state.expenses.travel / 100)})</label>
+                    <label htmlFor="travel">Travel ({toDollar(budget * (this.state.expenses.travel / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="travel" className="form-control" min="0" max="100" value={this.state.expenses.travel}/>
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="travel" value={copyExpenses.travel} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="healthcare">Healthcare (${budget * (this.state.expenses.healthcare / 100)})</label>
+                    <label htmlFor="healthcare">Healthcare ({toDollar(budget * (this.state.expenses.healthcare / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="healthcare" className="form-control" min="0" max="100" value={this.state.expenses.healthcare} />
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="healthcare" value={copyExpenses.healthcare} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="personal">Personal (${budget * (this.state.expenses.personal / 100)})</label>
+                    <label htmlFor="personal">Personal ({toDollar(budget * (this.state.expenses.personal / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="personal" className="form-control" min="0" max="100" value={this.state.expenses.personal} />
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="personal" value={copyExpenses.personal} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="education">Education (${budget * (this.state.expenses.education / 100)})</label>
+                    <label htmlFor="education">Education ({toDollar(budget * (this.state.expenses.education / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="education" className="form-control" min="0" max="100" value={this.state.expenses.education} />
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="education" value={copyExpenses.education} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="services">Services (${budget * (this.state.expenses.services / 100)})</label>
+                    <label htmlFor="services">Services ({toDollar(budget * (this.state.expenses.services / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="services" className="form-control" min="0" max="100" value={this.state.expenses.services} />
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="services" value={copyExpenses.services} onChange={this.handleChange} /><span>%</span>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="misc">Misc. (${budget * (this.state.expenses.misc / 100)})</label>
+                    <label htmlFor="misc">Misc. ({toDollar(budget * (this.state.expenses.misc / 100))})</label>
                     <div className="d-flex align-items-center">
                       <input onChange={this.handleChange} type="range" id="misc" className="form-control" min="0" max="100" value={this.state.expenses.misc} />
                       <input type="number" min="0" max="100" className="sliders ml-2 mb-0" name="misc" value={copyExpenses.misc} onChange={this.handleChange} /><span>%</span>
