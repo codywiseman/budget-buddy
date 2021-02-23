@@ -26,5 +26,6 @@ BudgetBuddy is a full-stack budgeting web application that allows user to easily
 ## Screenshots
 
 ![](server/public/demo/connect.gif)
-![](server/public/demo/budget-form.gif)
-![](server/public/demo/categorize.gif)
+![](server/public/demo/ss1.png)
+![](server/public/demo/ss2.png)
+![](server/public/demo/ss3.png)
