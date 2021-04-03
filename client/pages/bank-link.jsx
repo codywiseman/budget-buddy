@@ -2,6 +2,7 @@ import React from 'react';
 import Link from '../components/link';
 import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
+import pigGif from '../images/piggy.gif';
 
 const styles = {
   color: '#27A745'
@@ -25,7 +26,9 @@ export default class BankLink extends React.Component {
         </div>
         <div className="container mt-5 text-center">
           <h6 className="mt-4 mb-4">Having access to your bank transactions in BudgetBuddy makes keeping track of your budget a breeze!</h6>
-          <i className="fas fa-piggy-bank fa-10x mt-4 mb-4" style={styles}></i>
+          <div>
+            <img src={pigGif} alt="Piggy Bank"/>
+          </div>
           <div className="mt-4">
             <Link />
           </div>
