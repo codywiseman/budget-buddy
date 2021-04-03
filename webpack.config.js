@@ -25,6 +25,10 @@ module.exports = {
             ]
           }
         }
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        type: "asset/resource"
       }
     ]
   },
@@ -42,5 +46,5 @@ module.exports = {
   },
   performance: {
     hints: false
-  }
+  },
 };
